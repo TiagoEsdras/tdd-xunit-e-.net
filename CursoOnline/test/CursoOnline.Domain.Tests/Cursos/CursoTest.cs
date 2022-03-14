@@ -51,6 +51,9 @@ namespace CursoOnline.Domain.Tests.Cursos
     {
         public Curso(string nome, int cargaHoraria, PublicoAlvoEnum publicoAlvo, decimal valor)
         {
+            if (string.IsNullOrEmpty(nome))
+                throw new ArgumentException("Nome não pode ser nulo ou uma string vazia");
+
             Nome = nome;
             CargaHoraria = cargaHoraria;
             PublicoAlvo = publicoAlvo;
