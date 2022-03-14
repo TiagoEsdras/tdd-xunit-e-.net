@@ -93,6 +93,9 @@ namespace CursoOnline.Domain.Tests.Cursos
             if (cargaHoraria <= 0)
                 throw new ArgumentException("Carga horária não pode ser menor ou igual a zero");
 
+            if (valor <= 0)
+                throw new ArgumentException("Valor do curso não pode ser menor ou igual a zero");
+
             Nome = nome;
             CargaHoraria = cargaHoraria;
             PublicoAlvo = publicoAlvo;
