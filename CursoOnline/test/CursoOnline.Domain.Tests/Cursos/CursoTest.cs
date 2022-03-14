@@ -6,6 +6,19 @@ namespace CursoOnline.Domain.Tests.Cursos
 {
     public class CursoTest
     {
+        private readonly string _nome;
+        private readonly int _cargaHoraria;
+        private readonly PublicoAlvoEnum _publicoAlvo;
+        private readonly decimal _valor;
+
+        public CursoTest()
+        {
+            _nome = "Curso 01";
+            _cargaHoraria = 500;
+            _publicoAlvo = PublicoAlvoEnum.Estudante;
+            _valor = 199.99m;
+        }
+
         /// <summary>
         /// Deve criar um curso com nome, carga horária, público alvo, e valor do curso;
         /// As opções para PublicoAlvo devem ser: "Estudante", "Universitário", "Empregado" e "Empreendedor";
@@ -33,17 +46,9 @@ namespace CursoOnline.Domain.Tests.Cursos
         [InlineData("")]
         [InlineData(null)]
         public void NaoDeveCursoTerNomeInvalido(string nomeInvalido)
-        {
-            var cursoEsperado = new
-            {
-                Nome = "Curso 01",
-                CargaHoraria = 500,
-                PublicoAlvo = PublicoAlvoEnum.Estudante,
-                Valor = 199.99m
-            };
-
+        {           
             Assert.Throws<ArgumentException>(() =>
-                new Curso(nomeInvalido, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
+                new Curso(nomeInvalido, _cargaHoraria, _publicoAlvo, _valor)
             ).ComMensagem("Nome não pode ser nulo ou uma string vazia");
         }
 
@@ -55,16 +60,10 @@ namespace CursoOnline.Domain.Tests.Cursos
         [InlineData(-50)]
         public void NaoDeveCursoTerCargaHorariaInvalida(int cargaHorariaInvalida)
         {
-            var cursoEsperado = new
-            {
-                Nome = "Curso 01",
-                CargaHoraria = 500,
-                PublicoAlvo = PublicoAlvoEnum.Estudante,
-                Valor = 199.99m
-            };
+            
 
            Assert.Throws<ArgumentException>(() =>
-                new Curso(cursoEsperado.Nome, cargaHorariaInvalida, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
+                new Curso(_nome, cargaHorariaInvalida, _publicoAlvo, _valor)
             ).ComMensagem("Carga horária não pode ser menor ou igual a zero");
         }
 
@@ -85,7 +84,7 @@ namespace CursoOnline.Domain.Tests.Cursos
             };
 
             Assert.Throws<ArgumentException>(() =>
-                new Curso(cursoEsperado.Nome, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, valorInvalido)
+                new Curso(_nome, _cargaHoraria, cursoEsperado.PublicoAlvo, valorInvalido)
             ).ComMensagem("Valor do curso não pode ser menor ou igual a zero");
         }
     }
