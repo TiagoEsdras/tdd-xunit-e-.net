@@ -45,6 +45,24 @@ namespace CursoOnline.Domain.Tests.Cursos
                 new Curso(nomeInvalido, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
             );
         }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-50)]
+        public void NaoDeveCursoTerCargaHorariaInvalida(int cargaHorariaInvalida)
+        {
+            var cursoEsperado = new
+            {
+                Nome = "Curso 01",
+                CargaHoraria = 500,
+                PublicoAlvo = PublicoAlvoEnum.Estudante,
+                Valor = 199.99m
+            };
+
+            Assert.Throws<ArgumentException>(() =>
+                new Curso(cursoEsperado.Nome, cargaHorariaInvalida, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
+            );
+        }
     }
 
     public class Curso
@@ -52,7 +70,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public Curso(string nome, int cargaHoraria, PublicoAlvoEnum publicoAlvo, decimal valor)
         {
             if (string.IsNullOrEmpty(nome))
-                throw new ArgumentException("Nome não pode ser nulo ou uma string vazia");
+                throw new ArgumentException("Nome não pode ser nulo ou uma string vazia");         
 
             Nome = nome;
             CargaHoraria = cargaHoraria;
