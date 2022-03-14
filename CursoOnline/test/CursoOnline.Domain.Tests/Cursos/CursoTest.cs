@@ -25,6 +25,26 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             cursoEsperado.ToExpectedObject().ShouldMatch(curso);
         }
+        /// <summary>
+        /// Nome não pode ser invalido
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveCursoTerNomeInvalido(string nomeInvalido)
+        {
+            var cursoEsperado = new
+            {
+                Nome = "Curso 01",
+                CargaHoraria = 500,
+                PublicoAlvo = PublicoAlvoEnum.Estudante,
+                Valor = 199.99m
+            };
+
+            Assert.Throws<ArgumentException>(() =>
+                new Curso(nomeInvalido, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
+            );
+        }
     }
 
     public class Curso
