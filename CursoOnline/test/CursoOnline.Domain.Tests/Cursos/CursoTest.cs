@@ -29,7 +29,10 @@ namespace CursoOnline.Domain.Tests.Cursos
     {
         public Curso(string nome, int cargaHoraria, string publicoAlvo, decimal valor)
         {
-            throw new NotImplementedException();
+            Nome = nome;
+            CargaHoraria = cargaHoraria;
+            PublicoAlvo = publicoAlvo;
+            Valor = valor;
         }
 
         public string Nome { get; set; }
