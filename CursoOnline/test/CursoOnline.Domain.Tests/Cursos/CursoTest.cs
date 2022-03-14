@@ -25,6 +25,7 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             cursoEsperado.ToExpectedObject().ShouldMatch(curso);
         }
+
         /// <summary>
         /// Nome não pode ser invalido
         /// </summary>
@@ -41,13 +42,14 @@ namespace CursoOnline.Domain.Tests.Cursos
                 Valor = 199.99m
             };
 
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Curso(nomeInvalido, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
-            ).Message;
-
-            Assert.Equal("Nome não pode ser nulo ou uma string vazia", message);
+            ).ComMensagem("Nome não pode ser nulo ou uma string vazia");
         }
 
+        /// <summary>
+        /// Carga horaria nao pode ser invalida
+        /// </summary>
         [Theory]
         [InlineData(0)]
         [InlineData(-50)]
@@ -61,13 +63,14 @@ namespace CursoOnline.Domain.Tests.Cursos
                 Valor = 199.99m
             };
 
-            var message = Assert.Throws<ArgumentException>(() =>
+           Assert.Throws<ArgumentException>(() =>
                 new Curso(cursoEsperado.Nome, cargaHorariaInvalida, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
-            ).Message;
-
-            Assert.Equal("Carga horária não pode ser menor ou igual a zero", message);
+            ).ComMensagem("Carga horária não pode ser menor ou igual a zero");
         }
 
+        /// <summary>
+        /// Valor do curso não pode ser invalido
+        /// </summary>
         [Theory]
         [InlineData(0)]
         [InlineData(-50.88)]
@@ -81,11 +84,9 @@ namespace CursoOnline.Domain.Tests.Cursos
                 Valor = 199.99m
             };
 
-            var message =  Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Curso(cursoEsperado.Nome, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, valorInvalido)
-            ).Message;
-
-            Assert.Equal("Valor do curso não pode ser menor ou igual a zero", message);
+            ).ComMensagem("Valor do curso não pode ser menor ou igual a zero");
         }
     }
 
