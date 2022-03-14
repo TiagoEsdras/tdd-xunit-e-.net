@@ -63,6 +63,24 @@ namespace CursoOnline.Domain.Tests.Cursos
                 new Curso(cursoEsperado.Nome, cargaHorariaInvalida, cursoEsperado.PublicoAlvo, cursoEsperado.Valor)
             );
         }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-50.88)]
+        public void NaoDeveCursoTerValorInvalido(decimal valorInvalido)
+        {
+            var cursoEsperado = new
+            {
+                Nome = "Curso 01",
+                CargaHoraria = 500,
+                PublicoAlvo = PublicoAlvoEnum.Estudante,
+                Valor = 199.99m
+            };
+
+            Assert.Throws<ArgumentException>(() =>
+                new Curso(cursoEsperado.Nome, cursoEsperado.CargaHoraria, cursoEsperado.PublicoAlvo, valorInvalido)
+            );
+        }
     }
 
     public class Curso
