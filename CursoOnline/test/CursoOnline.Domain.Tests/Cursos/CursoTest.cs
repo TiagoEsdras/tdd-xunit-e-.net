@@ -6,22 +6,7 @@ using Xunit;
 namespace CursoOnline.Domain.Tests.Cursos
 {
     public class CursoTest
-    {
-        private readonly string _nome;
-        private readonly string _descricao;
-        private readonly int _cargaHoraria;
-        private readonly PublicoAlvoEnum _publicoAlvo;
-        private readonly decimal _valor;
-
-        public CursoTest()
-        {
-            _nome = "Curso 01";
-            _descricao = "Descricao do curso";
-            _cargaHoraria = 500;
-            _publicoAlvo = PublicoAlvoEnum.Estudante;
-            _valor = 199.99m;
-        }
-
+    {   
         /// <summary>
         /// Deve criar um curso com nome, carga horária, público alvo, e valor do curso;
         /// As opções para PublicoAlvo devem ser: "Estudante", "Universitário", "Empregado" e "Empreendedor";
