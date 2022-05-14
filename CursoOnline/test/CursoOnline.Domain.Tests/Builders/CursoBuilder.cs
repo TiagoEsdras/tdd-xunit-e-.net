@@ -1,10 +1,11 @@
 ﻿using Bogus;
-using CursoOnline.Domain.Tests.Cursos;
+using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Enums;
 
 namespace CursoOnline.Domain.Tests.Builders
 {
     public class CursoBuilder
-    {          
+    {
         private string _nome;
         private string _descricao;
         private int _cargaHoraria;

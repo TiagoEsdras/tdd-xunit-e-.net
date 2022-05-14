@@ -1,4 +1,6 @@
-﻿using CursoOnline.Domain.Tests.Builders;
+﻿using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using System;
 using Xunit;
@@ -8,7 +10,7 @@ namespace CursoOnline.Domain.Tests.Cursos
     public class CursoTest
     {   
         /// <summary>
-        /// Deve criar um curso com nome, carga horária, público alvo, e valor do curso;
+        /// Deve criar um curso com nome, descrição, carga horária, público alvo, e valor do curso;
         /// As opções para PublicoAlvo devem ser: "Estudante", "Universitário", "Empregado" e "Empreendedor";
         /// </summary>
         [Fact]
@@ -79,43 +81,5 @@ namespace CursoOnline.Domain.Tests.Cursos
                 CursoBuilder.Novo().ComValor(valorInvalido).Build()
             ).ComMensagem("Valor do curso não pode ser menor ou igual a zero");
         }
-    }
-
-    public class Curso
-    {
-        public Curso(string nome, string descricao, int cargaHoraria, PublicoAlvoEnum publicoAlvo, decimal valor)
-        {
-            if (string.IsNullOrEmpty(nome))
-                throw new ArgumentException("Nome não pode ser nulo ou uma string vazia");
-
-            if (string.IsNullOrEmpty(descricao))
-                throw new ArgumentException("Descrição não pode ser nula ou uma string vazia");
-
-            if (cargaHoraria <= 0)
-                throw new ArgumentException("Carga horária não pode ser menor ou igual a zero");
-
-            if (valor <= 0)
-                throw new ArgumentException("Valor do curso não pode ser menor ou igual a zero");
-
-            Nome = nome;
-            Descricao = descricao;
-            CargaHoraria = cargaHoraria;
-            PublicoAlvo = publicoAlvo;
-            Valor = valor;
-        }
-
-        public string Nome { get; private set; }
-        public string Descricao { get; private set; }
-        public int CargaHoraria { get; private set; }
-        public PublicoAlvoEnum PublicoAlvo { get; private set; }
-        public decimal Valor { get; private set; }
-    }
-
-    public enum PublicoAlvoEnum
-    {
-        Estudante,
-        Universitario,
-        Empregado,
-        Empreendedor
     }
 }
