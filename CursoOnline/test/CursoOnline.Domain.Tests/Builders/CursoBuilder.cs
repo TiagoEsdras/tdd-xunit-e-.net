@@ -1,14 +1,25 @@
-﻿using CursoOnline.Domain.Tests.Cursos;
+﻿using Bogus;
+using CursoOnline.Domain.Tests.Cursos;
 
 namespace CursoOnline.Domain.Tests.Builders
 {
     public class CursoBuilder
-    {
-        private string _nome = "Nome do curso";
-        private string _descricao = "Descrição do curso";
-        private int _cargaHoraria = 80;
-        private PublicoAlvoEnum _publicoAlvo = PublicoAlvoEnum.Estudante;
-        private decimal _valor = 950;
+    {          
+        private string _nome;
+        private string _descricao;
+        private int _cargaHoraria;
+        private PublicoAlvoEnum _publicoAlvo;
+        private decimal _valor;
+
+        public CursoBuilder()
+        {
+            var faker = new Faker();
+            _nome = faker.Random.Word();
+            _descricao = faker.Lorem.Paragraph();
+            _cargaHoraria = faker.Random.Int(50, 100);
+            _publicoAlvo = PublicoAlvoEnum.Estudante;
+            _valor = faker.Random.Decimal(500, 1000);
+        }
 
         public static CursoBuilder Novo()
         {
