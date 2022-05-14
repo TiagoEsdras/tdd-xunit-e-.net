@@ -1,4 +1,5 @@
-﻿using ExpectedObjects;
+﻿using CursoOnline.Domain.Tests.Builders;
+using ExpectedObjects;
 using System;
 using Xunit;
 
@@ -51,7 +52,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public void NaoDeveCursoTerNomeInvalido(string nomeInvalido)
         {
             Assert.Throws<ArgumentException>(() =>
-                new Curso(nomeInvalido, _descricao, _cargaHoraria, _publicoAlvo, _valor)
+                CursoBuilder.Novo().ComNome(nomeInvalido).Build()
             ).ComMensagem("Nome não pode ser nulo ou uma string vazia");
         }
 
@@ -64,7 +65,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public void NaoDeveCursoTerDescricaoInvalida(string descricaoInvalida)
         {
             Assert.Throws<ArgumentException>(() =>
-                new Curso(_nome, descricaoInvalida, _cargaHoraria, _publicoAlvo, _valor)
+                CursoBuilder.Novo().ComDescricao(descricaoInvalida).Build()
             ).ComMensagem("Descrição não pode ser nula ou uma string vazia");
         }
 
@@ -77,7 +78,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public void NaoDeveCursoTerCargaHorariaInvalida(int cargaHorariaInvalida)
         {
             Assert.Throws<ArgumentException>(() =>
-                 new Curso(_nome, _descricao, cargaHorariaInvalida, _publicoAlvo, _valor)
+                 CursoBuilder.Novo().ComCargaHoraria(cargaHorariaInvalida).Build()
              ).ComMensagem("Carga horária não pode ser menor ou igual a zero");
         }
 
@@ -90,7 +91,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public void NaoDeveCursoTerValorInvalido(decimal valorInvalido)
         {
             Assert.Throws<ArgumentException>(() =>
-                new Curso(_nome, _descricao, _cargaHoraria, _publicoAlvo, valorInvalido)
+                CursoBuilder.Novo().ComValor(valorInvalido).Build()
             ).ComMensagem("Valor do curso não pode ser menor ou igual a zero");
         }
     }
