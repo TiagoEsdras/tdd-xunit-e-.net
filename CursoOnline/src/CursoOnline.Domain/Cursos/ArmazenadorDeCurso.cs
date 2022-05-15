@@ -19,12 +19,10 @@ namespace CursoOnline.Domain.Cursos
             if (cursoJaSalvo != null)
                 throw new ArgumentException("Nome do curso já consta no banco de dados");
 
-            Enum.TryParse(typeof(PublicoAlvoEnum), cursoDto.PublicoAlvo, out var publicoAlvo);
-
-            if (publicoAlvo == null)
+            if(!Enum.TryParse<PublicoAlvoEnum>(cursoDto.PublicoAlvo, out var publicoAlvo))
                 throw new ArgumentException("Público Alvo inválido");
 
-            var curso = new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, (PublicoAlvoEnum)publicoAlvo, cursoDto.Valor);
+            var curso = new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, publicoAlvo, cursoDto.Valor);
             _cursoRepositorio.Adicionar(curso);
         }
     }
