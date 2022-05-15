@@ -2,6 +2,7 @@
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
 using Moq;
+using System;
 using Xunit;
 
 namespace CursoOnline.Domain.Tests.Cursos
@@ -21,7 +22,7 @@ namespace CursoOnline.Domain.Tests.Cursos
                 Nome = faker.Random.Word(),
                 Descricao = faker.Lorem.Paragraph(),
                 CargaHoraria = faker.Random.Int(50, 100),
-                PublicoAlvo = 1,
+                PublicoAlvo = "Estudante",
                 Valor = faker.Random.Decimal(500, 1000)
             };
 
@@ -37,6 +38,16 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             _cursoRepositorioMock.Verify(r => r.Adicionar(It.Is<Curso>(
                 c => c.Nome == _cursoDto.Nome && c.Descricao == _cursoDto.Descricao)));
+        }
+
+        [Fact]
+        public void NaoDeveInformarPublicoAlvoInvalido()
+        {
+            var publicoAlvoInvalido = "Medico";
+            _cursoDto.PublicoAlvo = publicoAlvoInvalido;
+            
+            Assert.Throws<ArgumentException>(() => _armazenadorDeCurso.Armazenar(_cursoDto))
+                .ComMensagem("Público Alvo inválido");
         }
     }
 
@@ -56,7 +67,12 @@ namespace CursoOnline.Domain.Tests.Cursos
 
         public void Armazenar(CursoDto cursoDto)
         {
-            var curso = new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, PublicoAlvoEnum.Estudante, cursoDto.Valor);
+            Enum.TryParse(typeof(PublicoAlvoEnum), cursoDto.PublicoAlvo, out var publicoAlvo);
+
+            if (publicoAlvo == null)
+                throw new ArgumentException("Público Alvo inválido");
+
+            var curso = new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, (PublicoAlvoEnum)publicoAlvo, cursoDto.Valor);
             _cursoRepositorio.Adicionar(curso);
         }
     }
@@ -66,7 +82,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public int CargaHoraria { get; set; }
-        public int PublicoAlvo { get; set; }
+        public string PublicoAlvo { get; set; }
         public decimal Valor { get; set; }
     }
 }
