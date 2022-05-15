@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Tests.Builders;
 using Moq;
 using System;
 using Xunit;
@@ -49,16 +50,28 @@ namespace CursoOnline.Domain.Tests.Cursos
             Assert.Throws<ArgumentException>(() => _armazenadorDeCurso.Armazenar(_cursoDto))
                 .ComMensagem("Público Alvo inválido");
         }
+
+        [Fact]
+        public void NaoDeveAdicionarCursoComMesmoNomeDeOutroCursoJaSalvo()
+        {
+            var cursoJaSalvo = CursoBuilder.Novo().ComNome(_cursoDto.Nome).Build();
+
+            _cursoRepositorioMock.Setup(r => r.ObterPeloNome(_cursoDto.Nome)).Returns(cursoJaSalvo);
+
+            Assert.Throws<ArgumentException>(() => _armazenadorDeCurso.Armazenar(_cursoDto))
+                .ComMensagem("Nome do curso já consta no banco de dados");
+        }
     }
 
     public interface ICursoRepositorio
     {
         void Adicionar(Curso curso);
+        Curso ObterPeloNome(string nome);
     }
 
     public class ArmazenadorDeCurso
     {
-        private ICursoRepositorio _cursoRepositorio;
+        private readonly ICursoRepositorio _cursoRepositorio;
 
         public ArmazenadorDeCurso(ICursoRepositorio cursoRepositorio)
         {
@@ -67,6 +80,11 @@ namespace CursoOnline.Domain.Tests.Cursos
 
         public void Armazenar(CursoDto cursoDto)
         {
+            var cursoJaSalvo = _cursoRepositorio.ObterPeloNome(cursoDto.Nome);
+
+            if (cursoJaSalvo != null)
+                throw new ArgumentException("Nome do curso já consta no banco de dados");
+
             Enum.TryParse(typeof(PublicoAlvoEnum), cursoDto.PublicoAlvo, out var publicoAlvo);
 
             if (publicoAlvo == null)
