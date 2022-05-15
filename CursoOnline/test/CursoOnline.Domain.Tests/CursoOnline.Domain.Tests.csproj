@@ -23,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\CursoOnline.Application\CursoOnline.Application.csproj" />
+    <ProjectReference Include="..\..\src\CursoOnline.Dados\CursoOnline.Dados.csproj" />
     <ProjectReference Include="..\..\src\CursoOnline.Domain\CursoOnline.Domain.csproj" />
   </ItemGroup>
 
