@@ -1,6 +1,6 @@
 ﻿namespace CursoOnline.Application.Dtos
 {
-    public class CursoDto
+    public class CreateCursoDto
     {
         public string Nome { get; set; }
         public string Descricao { get; set; }

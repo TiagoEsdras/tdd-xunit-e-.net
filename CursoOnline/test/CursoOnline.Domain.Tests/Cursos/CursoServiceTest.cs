@@ -13,7 +13,7 @@ namespace CursoOnline.Domain.Tests.Cursos
 {
     public class CursoServiceTest
     {
-        private readonly CursoDto _cursoDto;
+        private readonly CreateCursoDto _cursoDto;
         private readonly Mock<ICursoRepositorio> _cursoRepositorioMock;
         private readonly Mock<IRepositorioBase<Curso>> _repositorioBaseMock;
         private readonly CursoService _cursoService;
@@ -23,8 +23,8 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             var faker = new Faker();
 
-            _cursoDto = new CursoDto
-            {
+            _cursoDto = new CreateCursoDto
+            {                
                 Nome = faker.Random.Word(),
                 Descricao = faker.Lorem.Paragraph(),
                 CargaHoraria = faker.Random.Int(50, 100),

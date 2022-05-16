@@ -15,6 +15,7 @@ namespace CursoOnline.Dados
         public async Task Adicionar(T entity)
         {
             await _databaseContext.Set<T>().AddAsync(entity);
+            await _databaseContext.SaveChangesAsync();
         }
     }
 }

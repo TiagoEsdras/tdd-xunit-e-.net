@@ -19,7 +19,7 @@ namespace CursoOnline.Application
             _cursoRepositorio = cursoRepositorio;
         }
 
-        public async Task Adicionar(CursoDto cursoDto)
+        public async Task Adicionar(CreateCursoDto cursoDto)
         {
             var cursoJaSalvo = await _cursoRepositorio.ObterPeloNome(cursoDto.Nome);
 

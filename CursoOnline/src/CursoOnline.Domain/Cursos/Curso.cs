@@ -1,5 +1,6 @@
 ﻿using CursoOnline.Domain.Enums;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CursoOnline.Domain.Cursos
 {
@@ -26,6 +27,8 @@ namespace CursoOnline.Domain.Cursos
             Valor = valor;
         }
 
+        [Key]
+        public Guid Id { get; set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
         public int CargaHoraria { get; private set; }
