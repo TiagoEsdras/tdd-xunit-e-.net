@@ -2,6 +2,7 @@
 using CursoOnline.Application;
 using CursoOnline.Application.Dtos;
 using CursoOnline.Dados.Contratos;
+using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Tests.Builders;
 using Moq;
@@ -55,7 +56,7 @@ namespace CursoOnline.Domain.Tests.Cursos
           
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_cursoDto));
 
-            error.ComMensagem("Público Alvo inválido");
+            error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
         }
 
         [Fact]
@@ -67,7 +68,7 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_cursoDto));
 
-            error.ComMensagem("Nome do curso já consta no banco de dados");
+            error.ComMensagem(ErroMessage.NOME_DO_CURSO_JA_EXISTENTE);
         }
     }
 }

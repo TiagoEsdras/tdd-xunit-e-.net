@@ -1,4 +1,5 @@
-﻿using CursoOnline.Domain.Enums;
+﻿using CursoOnline.Domain.Constants;
+using CursoOnline.Domain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,16 +10,16 @@ namespace CursoOnline.Domain.Cursos
         public Curso(string nome, string descricao, int cargaHoraria, PublicoAlvoEnum publicoAlvo, decimal valor)
         {
             if (string.IsNullOrEmpty(nome))
-                throw new ArgumentException("Nome não pode ser nulo ou uma string vazia");
+                throw new ArgumentException(ErroMessage.NOME_INVALIDO);
 
             if (string.IsNullOrEmpty(descricao))
-                throw new ArgumentException("Descrição não pode ser nula ou uma string vazia");
+                throw new ArgumentException(ErroMessage.DESCRICAO_INVALIDA);
 
             if (cargaHoraria <= 0)
-                throw new ArgumentException("Carga horária não pode ser menor ou igual a zero");
+                throw new ArgumentException(ErroMessage.CARGA_HORARIA_INVALIDA);
 
             if (valor <= 0)
-                throw new ArgumentException("Valor do curso não pode ser menor ou igual a zero");
+                throw new ArgumentException(ErroMessage.VALOR_INVALIDO);
 
             Nome = nome;
             Descricao = descricao;

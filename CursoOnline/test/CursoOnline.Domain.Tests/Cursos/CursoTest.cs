@@ -1,4 +1,5 @@
-﻿using CursoOnline.Domain.Cursos;
+﻿using CursoOnline.Domain.Constants;
+using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
@@ -40,7 +41,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             Assert.Throws<ArgumentException>(() =>
                 CursoBuilder.Novo().ComNome(nomeInvalido).Build()
-            ).ComMensagem("Nome não pode ser nulo ou uma string vazia");
+            ).ComMensagem(ErroMessage.NOME_INVALIDO);
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             Assert.Throws<ArgumentException>(() =>
                 CursoBuilder.Novo().ComDescricao(descricaoInvalida).Build()
-            ).ComMensagem("Descrição não pode ser nula ou uma string vazia");
+            ).ComMensagem(ErroMessage.DESCRICAO_INVALIDA);
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             Assert.Throws<ArgumentException>(() =>
                  CursoBuilder.Novo().ComCargaHoraria(cargaHorariaInvalida).Build()
-             ).ComMensagem("Carga horária não pode ser menor ou igual a zero");
+             ).ComMensagem(ErroMessage.CARGA_HORARIA_INVALIDA);
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             Assert.Throws<ArgumentException>(() =>
                 CursoBuilder.Novo().ComValor(valorInvalido).Build()
-            ).ComMensagem("Valor do curso não pode ser menor ou igual a zero");
+            ).ComMensagem(ErroMessage.VALOR_INVALIDO);
         }
     }
 }
