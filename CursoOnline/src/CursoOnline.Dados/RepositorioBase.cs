@@ -17,5 +17,11 @@ namespace CursoOnline.Dados
             await _databaseContext.Set<T>().AddAsync(entity);
             await _databaseContext.SaveChangesAsync();
         }
+
+        public async Task Atualizar(T entity)
+        {
+            _databaseContext.Set<T>().Update(entity);
+            await _databaseContext.SaveChangesAsync();
+        }
     }
 }
