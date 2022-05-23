@@ -82,5 +82,109 @@ namespace CursoOnline.Domain.Tests.Cursos
                 CursoBuilder.Novo().ComValor(valorInvalido).Build()
             ).ComMensagem(ErroMessage.VALOR_INVALIDO);
         }
+
+        /// <summary>
+        /// Nome do curso deve ser alterado
+        /// </summary>
+        [Theory]
+        [InlineData("José")]
+        public void DeveAlterarNomeDoCUrso(string nomeEsperado)
+        {
+            var curso = CursoBuilder.Novo().Build();
+            curso.AlterarNome(nomeEsperado);
+
+            Assert.Equal(nomeEsperado, curso.Nome);
+        }
+
+        /// <summary>
+        /// Não pode alterar nome do curso quando nome for invalido
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlterarCursoComNomeInvalido(string nomeInvalido)
+        {
+            var curso = CursoBuilder.Novo().Build();
+
+            Assert.Throws<ArgumentException>(() => curso.AlterarNome(nomeInvalido)).ComMensagem(ErroMessage.NOME_INVALIDO);
+        }
+
+        /// <summary>
+        /// Descricao do curso deve ser alterada
+        /// </summary>
+        [Theory]
+        [InlineData("Descrição válida")]
+        public void DeveAlterarDescricaoDoCurso(string descricaoEsperada)
+        {
+            var curso = CursoBuilder.Novo().Build();
+            curso.AlterarDescricao(descricaoEsperada);
+
+            Assert.Equal(descricaoEsperada, curso.Descricao);
+        }
+
+        /// <summary>
+        /// Não pode alterar descrição do curso quando descrição for invalida
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlterarCursoComDescricaoInvalida(string descricaoInvalida)
+        {
+            var curso = CursoBuilder.Novo().Build();
+
+            Assert.Throws<ArgumentException>(() => curso.AlterarDescricao(descricaoInvalida)).ComMensagem(ErroMessage.DESCRICAO_INVALIDA);
+        }
+
+        /// <summary>
+        /// Carga horaria do curso deve ser alterada
+        /// </summary>
+        [Theory]
+        [InlineData(80)]
+        public void DeveAlterarCargaHorariaDoCurso(int cargaHorariaEsperada)
+        {
+            var curso = CursoBuilder.Novo().Build();
+            curso.AlterarCargaHoraria(cargaHorariaEsperada);
+
+            Assert.Equal(cargaHorariaEsperada, curso.CargaHoraria);
+        }
+
+        /// <summary>
+        /// Não pode alterar carga horária do curso quando carga horaria for invalida
+        /// </summary>
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-50)]
+        public void NaoDeveAlterarCursoComCargaHorariaInvalido(int cargaHorariaInvalida)
+        {
+            var curso = CursoBuilder.Novo().Build();
+
+            Assert.Throws<ArgumentException>(() => curso.AlterarCargaHoraria(cargaHorariaInvalida)).ComMensagem(ErroMessage.CARGA_HORARIA_INVALIDA);
+        }
+
+        /// <summary>
+        /// Valor do curso deve ser alterado
+        /// </summary>
+        [Theory]
+        [InlineData(80.79)]
+        public void DeveAlterarValorDoCurso(decimal valorEsperado)
+        {
+            var curso = CursoBuilder.Novo().Build();
+            curso.AlterarValor(valorEsperado);
+
+            Assert.Equal(valorEsperado, curso.Valor);
+        }
+
+        /// <summary>
+        /// Não pode alterar carga horária do curso quando carga horaria for invalida
+        /// </summary>
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-50)]
+        public void NaoDeveAlterarCursoComValorInvalido(decimal valorInvalido)
+        {
+            var curso = CursoBuilder.Novo().Build();
+
+            Assert.Throws<ArgumentException>(() => curso.AlterarValor(valorInvalido)).ComMensagem(ErroMessage.VALOR_INVALIDO);
+        }
     }
 }

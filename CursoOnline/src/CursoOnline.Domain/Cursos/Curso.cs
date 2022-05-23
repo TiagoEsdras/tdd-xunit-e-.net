@@ -35,5 +35,37 @@ namespace CursoOnline.Domain.Cursos
         public int CargaHoraria { get; private set; }
         public PublicoAlvoEnum PublicoAlvo { get; private set; }
         public decimal Valor { get; private set; }
+
+        public void AlterarNome(string nome)
+        {
+            if (string.IsNullOrEmpty(nome))
+                throw new ArgumentException(ErroMessage.NOME_INVALIDO);
+
+            Nome = nome;
+        }
+
+        public void AlterarCargaHoraria(int cargaHoraria)
+        {
+            if (cargaHoraria <= 0)
+                throw new ArgumentException(ErroMessage.CARGA_HORARIA_INVALIDA);
+
+            CargaHoraria = cargaHoraria;
+        }
+
+        public void AlterarDescricao(string descricao)
+        {
+            if (string.IsNullOrEmpty(descricao))
+                throw new ArgumentException(ErroMessage.DESCRICAO_INVALIDA);
+
+            Descricao = descricao;
+        }
+
+        public void AlterarValor(decimal valor)
+        {
+            if (valor <= 0)
+                throw new ArgumentException(ErroMessage.VALOR_INVALIDO);
+
+            Valor = valor;
+        }
     }
 }
