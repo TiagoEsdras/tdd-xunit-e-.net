@@ -5,6 +5,10 @@ namespace CursoOnline.Application.Dtos
 {
     public class CursoDto
     {
+        public CursoDto()
+        {
+        }
+
         public CursoDto(Curso curso)
         {
             Id = curso.Id;
@@ -14,6 +18,7 @@ namespace CursoOnline.Application.Dtos
             PublicoAlvo = curso.PublicoAlvo.ToString();
             Valor = curso.Valor;
         }
+
         public Guid Id { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }

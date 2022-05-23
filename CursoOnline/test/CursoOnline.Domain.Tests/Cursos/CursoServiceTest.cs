@@ -14,23 +14,35 @@ namespace CursoOnline.Domain.Tests.Cursos
 {
     public class CursoServiceTest
     {
-        private readonly CreateCursoDto _cursoDto;
+        private readonly CreateCursoDto _createCursoDto;
+        private readonly CursoDto _cursoDto;
         private readonly Mock<ICursoRepositorio> _cursoRepositorioMock;
         private readonly Mock<IRepositorioBase<Curso>> _repositorioBaseMock;
         private readonly CursoService _cursoService;
+        private readonly Faker _faker;
 
 
         public CursoServiceTest()
         {
-            var faker = new Faker();
+            _faker = new Faker("pt_BR");
 
-            _cursoDto = new CreateCursoDto
+            _createCursoDto = new CreateCursoDto
             {                
-                Nome = faker.Random.Word(),
-                Descricao = faker.Lorem.Paragraph(),
-                CargaHoraria = faker.Random.Int(50, 100),
+                Nome = _faker.Random.Word(),
+                Descricao = _faker.Lorem.Paragraph(),
+                CargaHoraria = _faker.Random.Int(50, 100),
                 PublicoAlvo = "Estudante",
-                Valor = faker.Random.Decimal(500, 1000)
+                Valor = _faker.Random.Decimal(500, 1000)
+            };
+
+            _cursoDto = new CursoDto
+            {
+                Id = _faker.Random.Guid(),
+                Nome = _faker.Random.Word(),
+                Descricao = _faker.Lorem.Paragraph(),
+                CargaHoraria = _faker.Random.Int(50, 100),
+                PublicoAlvo = "Estudante",
+                Valor = _faker.Random.Decimal(500, 1000)
             };
 
             _cursoRepositorioMock = new Mock<ICursoRepositorio>();
@@ -42,33 +54,47 @@ namespace CursoOnline.Domain.Tests.Cursos
         [Fact]
         public async Task DeveAdicinarCurso()
         {
-            await _cursoService.Adicionar(_cursoDto);
+            await _cursoService.Adicionar(_createCursoDto);
 
             _repositorioBaseMock.Verify(r => r.Adicionar(It.Is<Curso>(
-                c => c.Nome == _cursoDto.Nome && c.Descricao == _cursoDto.Descricao)));
+                c => c.Nome == _createCursoDto.Nome && c.Descricao == _createCursoDto.Descricao)));
         }
 
         [Fact]
         public async Task NaoDeveInformarPublicoAlvoInvalido()
         {
             var publicoAlvoInvalido = "Medico";
-            _cursoDto.PublicoAlvo = publicoAlvoInvalido;
+            _createCursoDto.PublicoAlvo = publicoAlvoInvalido;
           
-            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_cursoDto));
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_createCursoDto));
 
             error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
         }
 
         [Fact]
-        public async void NaoDeveAdicionarCursoComMesmoNomeDeOutroCursoJaSalvo()
+        public async Task NaoDeveAdicionarCursoComMesmoNomeDeOutroCursoJaSalvo()
         {
-            var cursoJaSalvo = CursoBuilder.Novo().ComNome(_cursoDto.Nome).Build();
+            var cursoJaSalvo = CursoBuilder.Novo().ComNome(_createCursoDto.Nome).Build();
 
-            _cursoRepositorioMock.Setup(r => r.ObterPeloNome(_cursoDto.Nome)).ReturnsAsync(cursoJaSalvo);
+            _cursoRepositorioMock.Setup(r => r.ObterPeloNome(_createCursoDto.Nome)).ReturnsAsync(cursoJaSalvo);
 
-            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_cursoDto));
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_createCursoDto));
 
             error.ComMensagem(ErroMessage.NOME_DO_CURSO_JA_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveAlterarDadosDoCurso()
+        {
+            var curso = CursoBuilder.Novo().Build();
+            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(_cursoDto.Id)).ReturnsAsync(curso);
+
+            await _cursoService.Atualizar(_cursoDto);
+
+            Assert.Equal(_cursoDto.Nome, curso.Nome);
+            Assert.Equal(_cursoDto.Valor, curso.Valor);
+            Assert.Equal(_cursoDto.CargaHoraria, curso.CargaHoraria);
+            Assert.Equal(_cursoDto.Descricao, curso.Descricao);
         }
     }
 }
