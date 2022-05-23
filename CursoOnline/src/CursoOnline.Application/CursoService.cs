@@ -5,6 +5,8 @@ using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CursoOnline.Application
@@ -32,6 +34,12 @@ namespace CursoOnline.Application
 
             var curso = new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, publicoAlvo, cursoDto.Valor);
             await _repositorioBase.Adicionar(curso);
+        }
+
+        public async Task<List<CursoDto>> ObterCursos()
+        {
+            var cursos = await _cursoRepositorio.ObterLista();
+            return cursos.Select(curso => new CursoDto(curso)).ToList();
         }
     }
 }

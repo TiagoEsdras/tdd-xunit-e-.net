@@ -2,6 +2,7 @@
 using CursoOnline.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CursoOnline.API.Controllers
@@ -17,7 +18,23 @@ namespace CursoOnline.API.Controllers
             _cursoService = cursoService;
         }
 
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(List<CursoDto>))]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var cursos = await _cursoService.ObterCursos();
+                return Ok(cursos);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
+
         [HttpPost]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Post(CreateCursoDto cursoDto)
         {
             try
