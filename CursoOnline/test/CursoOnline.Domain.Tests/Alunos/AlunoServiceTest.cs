@@ -40,6 +40,17 @@ namespace CursoOnline.Domain.Tests.Alunos
             _repositorioBaseMock.Verify(r => r.Adicionar(It.Is<Aluno>(
                 c => c.Nome == _createAlunoDto.Nome && c.CPF == _createAlunoDto.CPF && c.Email == _createAlunoDto.Email)));
         }
+
+        [Fact]
+        public async Task NaoDeveInformarPublicoAlvoInvalido()
+        {
+            var publicoAlvoInvalido = "Medico";
+            _createAlunoDto.PublicoAlvo = publicoAlvoInvalido;
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
+
+            error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
+        }
     }
 
     public class CreateAlunoDto
