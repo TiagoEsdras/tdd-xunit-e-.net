@@ -1,11 +1,9 @@
-﻿using CursoOnline.Domain.Enums;
+﻿using CursoOnline.Domain.Alunos;
+using CursoOnline.Domain.Constants;
+using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CursoOnline.Domain.Tests.Alunos
@@ -13,7 +11,7 @@ namespace CursoOnline.Domain.Tests.Alunos
     public class AlunoTest
     {
         /// <summary>
-        /// Deve criar um aluno com nome, cpf, email e publico alvo;        
+        /// Deve criar um aluno com nome, cpf, email e publico alvo;
         /// </summary>
         [Fact]
         public void DeveCriarUmAluno()
@@ -31,23 +29,17 @@ namespace CursoOnline.Domain.Tests.Alunos
             alunoEsperado.ToExpectedObject().ShouldMatch(aluno);
         }
 
-    }
-
-    public class Aluno
-    {
-        [Key]
-        public Guid Id { get; private set; }
-        public string Nome { get; private set; }
-        public string CPF { get; private set; }
-        public string Email { get; private set; }
-        public PublicoAlvoEnum PublicoAlvo { get; private set; }
-
-        public Aluno(string nome, string cpf, string email, PublicoAlvoEnum publicoAlvo)
+        /// <summary>
+        /// Nome não pode ser invalido
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlunoTerNomeInvalido(string nomeInvalido)
         {
-            Nome = nome;
-            CPF = cpf;
-            Email = email;
-            PublicoAlvo = publicoAlvo;
+            Assert.Throws<ArgumentException>(() =>
+                AlunoBuilder.Novo().ComNome(nomeInvalido).Build()
+            ).ComMensagem(ErroMessage.NOME_INVALIDO);
         }
     }
 }
