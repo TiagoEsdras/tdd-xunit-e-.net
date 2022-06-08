@@ -3,6 +3,7 @@ using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Tests.Builders;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -14,7 +15,9 @@ namespace CursoOnline.Domain.Tests.Alunos
     {
         private readonly AlunoService _alunoService;
         private readonly CreateAlunoDto _createAlunoDto;
+        private readonly UpdateAlunoDto _updateAlunoDto;
         private readonly Mock<IRepositorioBase<Aluno>> _repositorioBaseMock;
+        private readonly Mock<IAlunoRepositorio> _alunoRepositorioMock;
         private readonly Faker _faker;
 
         public AlunoServiceTest()
@@ -27,9 +30,17 @@ namespace CursoOnline.Domain.Tests.Alunos
                 Email = _faker.Person.Email,
                 PublicoAlvo = "Estudante"
             };
+
+            _updateAlunoDto = new UpdateAlunoDto
+            {
+                Id = _faker.Random.Guid(),
+                Nome = _faker.Person.FullName,
+            };
+
+            _alunoRepositorioMock = new Mock<IAlunoRepositorio>();
             _repositorioBaseMock = new Mock<IRepositorioBase<Aluno>>();
 
-            _alunoService = new AlunoService(_repositorioBaseMock.Object);
+            _alunoService = new AlunoService(_repositorioBaseMock.Object, _alunoRepositorioMock.Object);
         }
 
         [Fact]
@@ -51,6 +62,22 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
         }
+
+        [Fact]
+        public async Task DeveAlterarNomeDoAluno()
+        {
+            var aluno = AlunoBuilder.Novo().Build();
+            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(_updateAlunoDto.Id)).ReturnsAsync(aluno);
+
+            await _alunoService.Atualizar(_updateAlunoDto);
+
+            Assert.Equal(_updateAlunoDto.Nome, aluno.Nome);
+        }
+    }
+
+    public interface IAlunoRepositorio
+    {
+        Task<Aluno> ObterPorId(Guid id);
     }
 
     public class CreateAlunoDto
@@ -63,11 +90,13 @@ namespace CursoOnline.Domain.Tests.Alunos
 
     public class AlunoService : IAlunoService
     {
-        private IRepositorioBase<Aluno> _repositorioBase;
+        private readonly IRepositorioBase<Aluno> _repositorioBase;
+        private readonly IAlunoRepositorio _alunoRepositorio;
 
-        public AlunoService(IRepositorioBase<Aluno> repositorioBase)
+        public AlunoService(IRepositorioBase<Aluno> repositorioBase, IAlunoRepositorio alunoRepositorio)
         {
             _repositorioBase = repositorioBase;
+            _alunoRepositorio = alunoRepositorio;
         }
 
         public async Task Adicionar(CreateAlunoDto createAlunoDto)
@@ -78,10 +107,25 @@ namespace CursoOnline.Domain.Tests.Alunos
             var aluno = new Aluno(createAlunoDto.Nome, createAlunoDto.CPF, createAlunoDto.Email, publicoAlvo);
             await _repositorioBase.Adicionar(aluno);
         }
+
+        public async Task Atualizar(UpdateAlunoDto updateAlunoDto)
+        {
+            var aluno = await _alunoRepositorio.ObterPorId(updateAlunoDto.Id);
+            aluno.AlterarNome(updateAlunoDto.Nome);
+            await _repositorioBase.Atualizar(aluno);
+        }
     }
 
     public interface IAlunoService
     {
         Task Adicionar(CreateAlunoDto createAlunoDto);
+
+        Task Atualizar(UpdateAlunoDto alunoDto);
+    }
+
+    public class UpdateAlunoDto
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
     }
 }
