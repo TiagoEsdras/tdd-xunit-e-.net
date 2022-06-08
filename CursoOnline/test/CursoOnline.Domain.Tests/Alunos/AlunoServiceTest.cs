@@ -73,10 +73,24 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             Assert.Equal(_updateAlunoDto.Nome, aluno.Nome);
         }
+
+        [Fact]
+        public async Task NaoDeveAdicionarAlunoComMesmoCPFDeOutroAlunoJaSalvo()
+        {
+            var alunoJaSalvo = AlunoBuilder.Novo().ComCPF(_createAlunoDto.CPF).Build();
+
+            _alunoRepositorioMock.Setup(ar => ar.ObterPeloCPF(_createAlunoDto.CPF)).ReturnsAsync(alunoJaSalvo);
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
+
+            error.ComMensagem(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
+        }
     }
 
     public interface IAlunoRepositorio
     {
+        Task<Aluno> ObterPeloCPF(string cpf);
+
         Task<Aluno> ObterPorId(Guid id);
     }
 
@@ -101,6 +115,10 @@ namespace CursoOnline.Domain.Tests.Alunos
 
         public async Task Adicionar(CreateAlunoDto createAlunoDto)
         {
+            var alunoJaExiste = await _alunoRepositorio.ObterPeloCPF(createAlunoDto.CPF);
+            if (alunoJaExiste is not null)
+                throw new ArgumentException(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
+
             if (!Enum.TryParse<PublicoAlvoEnum>(createAlunoDto.PublicoAlvo, out var publicoAlvo))
                 throw new ArgumentException(ErroMessage.PUBLICO_ALVO_INVALIDO);
 
