@@ -29,7 +29,7 @@ namespace CursoOnline.Domain.Cursos
         }
 
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
         public int CargaHoraria { get; private set; }
