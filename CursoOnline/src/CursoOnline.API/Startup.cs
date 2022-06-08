@@ -27,9 +27,11 @@ namespace CursoOnline.API
             services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("CursoOnlineApi"));
 
             services.AddScoped<ICursoService, CursoService>();
+            services.AddScoped<IAlunoService, AlunoService>();
 
             services.AddScoped(typeof(IRepositorioBase<>), typeof(RepositorioBase<>));
             services.AddScoped<ICursoRepositorio, CursoRepositorio>();
+            services.AddScoped<IAlunoRepositorio, AlunoRepositorio>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
