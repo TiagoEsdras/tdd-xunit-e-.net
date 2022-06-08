@@ -1,5 +1,6 @@
 ﻿using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,6 +20,12 @@ namespace CursoOnline.Domain.Alunos
         {
             if (string.IsNullOrEmpty(nome))
                 throw new ArgumentException(ErroMessage.NOME_INVALIDO);
+
+            if (string.IsNullOrEmpty(cpf))
+                throw new ArgumentException(ErroMessage.CPF_NULO_OU_VAZIO);
+
+            if (!ValidadorDeCPF.IsCpf(cpf))
+                throw new ArgumentException(ErroMessage.CPF_INVALIDO);
 
             Nome = nome;
             CPF = cpf;

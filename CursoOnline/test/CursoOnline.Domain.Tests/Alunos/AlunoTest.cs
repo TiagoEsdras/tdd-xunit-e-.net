@@ -41,5 +41,33 @@ namespace CursoOnline.Domain.Tests.Alunos
                 AlunoBuilder.Novo().ComNome(nomeInvalido).Build()
             ).ComMensagem(ErroMessage.NOME_INVALIDO);
         }
+
+        /// <summary>
+        /// CPF não pode ser nulo ou vazio
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlunoTerCPFNuloOuVazio(string cpfInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+                AlunoBuilder.Novo().ComCPF(cpfInvalido).Build()
+            ).ComMensagem(ErroMessage.CPF_NULO_OU_VAZIO);
+        }
+
+        /// <summary>
+        /// CPF não pode ser invalido
+        /// </summary>
+        [Theory]
+        [InlineData("12345678910")]
+        [InlineData("11111111111")]
+        [InlineData("11111111119")]
+        [InlineData("xxxxxxxxxxx")]
+        public void NaoDeveAlunoTerCPFInvalido(string cpfInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+                AlunoBuilder.Novo().ComCPF(cpfInvalido).Build()
+            ).ComMensagem(ErroMessage.CPF_INVALIDO);
+        }
     }
 }
