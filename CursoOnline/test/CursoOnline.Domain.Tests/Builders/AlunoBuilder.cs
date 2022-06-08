@@ -38,6 +38,12 @@ namespace CursoOnline.Domain.Tests.Builders
             return this;
         }
 
+        public AlunoBuilder ComEmail(string email)
+        {
+            _email = email;
+            return this;
+        }
+
         public Aluno Build()
         {
             return new Aluno(_nome, _cpf, _email, _publicoAlvo);

@@ -27,6 +27,12 @@ namespace CursoOnline.Domain.Alunos
             if (!ValidadorDeCPF.IsCpf(cpf))
                 throw new ArgumentException(ErroMessage.CPF_INVALIDO);
 
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentException(ErroMessage.EMAIL_NULO_OU_VAZIO);
+
+            if (!ValidadorDeEmail.IsValid(email))
+                throw new ArgumentException(ErroMessage.EMAIL_INVALIDO);
+
             Nome = nome;
             CPF = cpf;
             Email = email;

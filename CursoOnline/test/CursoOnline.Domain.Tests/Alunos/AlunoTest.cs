@@ -69,5 +69,32 @@ namespace CursoOnline.Domain.Tests.Alunos
                 AlunoBuilder.Novo().ComCPF(cpfInvalido).Build()
             ).ComMensagem(ErroMessage.CPF_INVALIDO);
         }
+
+        /// <summary>
+        /// Email não pode ser nulo ou vazio
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlunoTerEmailNuloOuVazio(string emailInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+                AlunoBuilder.Novo().ComEmail(emailInvalido).Build()
+            ).ComMensagem(ErroMessage.EMAIL_NULO_OU_VAZIO);
+        }
+
+        /// <summary>
+        /// Email não pode ser invalido
+        /// </summary>
+        [Theory]
+        [InlineData("teste")]
+        [InlineData("@com.br")]
+        [InlineData("teste#gmail.com")]
+        public void NaoDeveAlunoTerEmailInvalido(string emailInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+                AlunoBuilder.Novo().ComEmail(emailInvalido).Build()
+            ).ComMensagem(ErroMessage.EMAIL_INVALIDO);
+        }
     }
 }
