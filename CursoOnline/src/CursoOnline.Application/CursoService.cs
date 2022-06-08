@@ -1,5 +1,5 @@
 ﻿using CursoOnline.Application.Contratos;
-using CursoOnline.Application.Dtos;
+using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;

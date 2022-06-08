@@ -1,4 +1,4 @@
-﻿namespace CursoOnline.Application.Dtos
+﻿namespace CursoOnline.Application.Dtos.Cursos
 {
     public class CreateCursoDto
     {

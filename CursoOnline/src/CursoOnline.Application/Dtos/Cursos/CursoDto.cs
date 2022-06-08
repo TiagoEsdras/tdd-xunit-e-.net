@@ -1,7 +1,7 @@
 ﻿using CursoOnline.Domain.Cursos;
 using System;
 
-namespace CursoOnline.Application.Dtos
+namespace CursoOnline.Application.Dtos.Cursos
 {
     public class CursoDto
     {

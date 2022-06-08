@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using CursoOnline.Application;
-using CursoOnline.Application.Dtos;
+using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
@@ -21,13 +21,12 @@ namespace CursoOnline.Domain.Tests.Cursos
         private readonly CursoService _cursoService;
         private readonly Faker _faker;
 
-
         public CursoServiceTest()
         {
             _faker = new Faker("pt_BR");
 
             _createCursoDto = new CreateCursoDto
-            {                
+            {
                 Nome = _faker.Random.Word(),
                 Descricao = _faker.Lorem.Paragraph(),
                 CargaHoraria = _faker.Random.Int(50, 100),
@@ -65,7 +64,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         {
             var publicoAlvoInvalido = "Medico";
             _createCursoDto.PublicoAlvo = publicoAlvoInvalido;
-          
+
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_createCursoDto));
 
             error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);

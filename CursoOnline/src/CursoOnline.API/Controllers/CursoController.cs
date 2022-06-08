@@ -1,5 +1,5 @@
 ﻿using CursoOnline.Application.Contratos;
-using CursoOnline.Application.Dtos;
+using CursoOnline.Application.Dtos.Cursos;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
