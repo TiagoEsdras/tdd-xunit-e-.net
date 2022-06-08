@@ -1,8 +1,9 @@
 ﻿using Bogus;
+using CursoOnline.Application;
+using CursoOnline.Application.Dtos.Alunos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
-using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Tests.Builders;
 using Moq;
 using System;
@@ -85,65 +86,5 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             error.ComMensagem(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
         }
-    }
-
-    public interface IAlunoRepositorio
-    {
-        Task<Aluno> ObterPeloCPF(string cpf);
-
-        Task<Aluno> ObterPorId(Guid id);
-    }
-
-    public class CreateAlunoDto
-    {
-        public string Nome { get; set; }
-        public string CPF { get; set; }
-        public string Email { get; set; }
-        public string PublicoAlvo { get; set; }
-    }
-
-    public class AlunoService : IAlunoService
-    {
-        private readonly IRepositorioBase<Aluno> _repositorioBase;
-        private readonly IAlunoRepositorio _alunoRepositorio;
-
-        public AlunoService(IRepositorioBase<Aluno> repositorioBase, IAlunoRepositorio alunoRepositorio)
-        {
-            _repositorioBase = repositorioBase;
-            _alunoRepositorio = alunoRepositorio;
-        }
-
-        public async Task Adicionar(CreateAlunoDto createAlunoDto)
-        {
-            var alunoJaExiste = await _alunoRepositorio.ObterPeloCPF(createAlunoDto.CPF);
-            if (alunoJaExiste is not null)
-                throw new ArgumentException(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
-
-            if (!Enum.TryParse<PublicoAlvoEnum>(createAlunoDto.PublicoAlvo, out var publicoAlvo))
-                throw new ArgumentException(ErroMessage.PUBLICO_ALVO_INVALIDO);
-
-            var aluno = new Aluno(createAlunoDto.Nome, createAlunoDto.CPF, createAlunoDto.Email, publicoAlvo);
-            await _repositorioBase.Adicionar(aluno);
-        }
-
-        public async Task Atualizar(UpdateAlunoDto updateAlunoDto)
-        {
-            var aluno = await _alunoRepositorio.ObterPorId(updateAlunoDto.Id);
-            aluno.AlterarNome(updateAlunoDto.Nome);
-            await _repositorioBase.Atualizar(aluno);
-        }
-    }
-
-    public interface IAlunoService
-    {
-        Task Adicionar(CreateAlunoDto createAlunoDto);
-
-        Task Atualizar(UpdateAlunoDto alunoDto);
-    }
-
-    public class UpdateAlunoDto
-    {
-        public Guid Id { get; set; }
-        public string Nome { get; set; }
     }
 }
