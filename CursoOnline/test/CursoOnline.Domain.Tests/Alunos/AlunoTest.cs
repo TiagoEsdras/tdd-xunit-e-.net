@@ -96,5 +96,18 @@ namespace CursoOnline.Domain.Tests.Alunos
                 AlunoBuilder.Novo().ComEmail(emailInvalido).Build()
             ).ComMensagem(ErroMessage.EMAIL_INVALIDO);
         }
+
+        /// <summary>
+        /// Não pode alterar nome do aluno quando nome for invalido
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void NaoDeveAlterarAlunoComNomeInvalido(string nomeInvalido)
+        {
+            var aluno = AlunoBuilder.Novo().Build();
+
+            Assert.Throws<ArgumentException>(() => aluno.AlterarNome(nomeInvalido)).ComMensagem(ErroMessage.NOME_INVALIDO);
+        }
     }
 }

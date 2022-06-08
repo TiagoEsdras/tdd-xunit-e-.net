@@ -38,5 +38,13 @@ namespace CursoOnline.Domain.Alunos
             Email = email;
             PublicoAlvo = publicoAlvo;
         }
+
+        public void AlterarNome(string nome)
+        {
+            if (string.IsNullOrEmpty(nome))
+                throw new ArgumentException(ErroMessage.NOME_INVALIDO);
+
+            Nome = nome;
+        }
     }
 }
