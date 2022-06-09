@@ -14,5 +14,6 @@
         public const string ALUNO_COM_CPF_JA_EXISTENTE = "Aluno com cpf já consta no banco de dados";
         public const string PUBLICO_ALVO_INVALIDO = "Público Alvo inválido";
         public const string INTERNAL_SERVER_ERROR = "Internal server error";
+        public const string ALUNO_NAO_EXISTENTE = "Não existe aluno com o id informado";
     }
 }

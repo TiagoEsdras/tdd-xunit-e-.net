@@ -98,5 +98,15 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             response.ToExpectedObject().ShouldMatch(new AlunoDto(aluno));
         }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoIdDoAlunoNaoExiste()
+        {
+            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(_faker.Random.Guid())).ThrowsAsync(new ArgumentException(message: ErroMessage.ALUNO_NAO_EXISTENTE));
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.ObterPorId(_faker.Random.Guid()));
+
+            error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);
+        }
     }
 }

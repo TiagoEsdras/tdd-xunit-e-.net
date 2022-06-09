@@ -43,6 +43,8 @@ namespace CursoOnline.Application
         public async Task<AlunoDto> ObterPorId(Guid id)
         {
             var aluno = await _alunoRepositorio.ObterPorId(id);
+            if (aluno is null)
+                throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
             return new AlunoDto(aluno);
         }
     }

@@ -39,6 +39,10 @@ namespace CursoOnline.Domain.Alunos
             PublicoAlvo = publicoAlvo;
         }
 
+        public Aluno()
+        {
+        }
+
         public void AlterarNome(string nome)
         {
             if (string.IsNullOrEmpty(nome))
