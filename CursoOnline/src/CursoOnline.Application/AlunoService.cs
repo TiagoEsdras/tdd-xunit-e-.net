@@ -64,7 +64,10 @@ namespace CursoOnline.Application
 
         public async Task Deletar(Guid id)
         {
-           await _alunoRepositorio.Deletar(id);
+            var aluno = await _alunoRepositorio.ObterPorId(id);
+            if(aluno is null)
+                throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
+            await _alunoRepositorio.Deletar(aluno);
         }
     }
 }

@@ -139,11 +139,21 @@ namespace CursoOnline.Domain.Tests.Alunos
                 alunos.Add(AlunoBuilder.Novo().Build());
             }
 
-            _alunoRepositorioMock.Setup(rb => rb.Deletar(alunos[0].Id));
+            _alunoRepositorioMock.Setup(rb => rb.ObterPorId(alunos[0].Id)).ReturnsAsync(alunos[0]);
 
             await _alunoService.Deletar(alunos[0].Id);
 
-            _alunoRepositorioMock.Verify(r => r.Deletar(alunos[0].Id), Times.Once);
+            _alunoRepositorioMock.Verify(r => r.Deletar(alunos[0]), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeveRetornarErroAoTentarDeletarAlunoQuandoIdDoAlunoNaoExiste()
+        {
+            _alunoRepositorioMock.Setup(ar => ar.Deletar(It.IsAny<Aluno>())).ThrowsAsync(new ArgumentException(message: ErroMessage.ALUNO_NAO_EXISTENTE));
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Deletar(_faker.Random.Guid()));
+
+            error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);
         }
     }
 }

@@ -13,6 +13,6 @@ namespace CursoOnline.Dados.Contratos
 
         Task<List<Aluno>> ObterLista();
 
-        Task Deletar(Guid id);
+        Task Deletar(Aluno aluno);
     }
 }

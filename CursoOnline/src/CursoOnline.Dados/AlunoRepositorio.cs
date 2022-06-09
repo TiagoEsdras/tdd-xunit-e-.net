@@ -32,9 +32,8 @@ namespace CursoOnline.Dados
             return await _databaseContext.Alunos.ToListAsync();
         }
 
-        public async Task Deletar(Guid id)
+        public async Task Deletar(Aluno aluno)
         {
-            var aluno = await ObterPorId(id);
             _databaseContext.Alunos.Remove(aluno);
             await _databaseContext.SaveChangesAsync();
         }
