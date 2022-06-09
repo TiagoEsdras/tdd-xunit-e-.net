@@ -2,6 +2,7 @@
 using CursoOnline.Application.Dtos.Alunos;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CursoOnline.API.Controllers
@@ -55,6 +56,21 @@ namespace CursoOnline.API.Controllers
             {
                 var aluno = await _alunoService.ObterPorId(id);
                 return Ok(aluno);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(List<AlunoDto>))]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var alunos = await _alunoService.ObterLista();
+                return Ok(alunos);
             }
             catch (Exception ex)
             {

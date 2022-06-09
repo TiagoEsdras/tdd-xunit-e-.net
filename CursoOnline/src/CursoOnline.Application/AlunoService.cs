@@ -5,6 +5,7 @@ using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Enums;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CursoOnline.Application
@@ -46,6 +47,19 @@ namespace CursoOnline.Application
             if (aluno is null)
                 throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
             return new AlunoDto(aluno);
+        }
+
+        public async Task<List<AlunoDto>> ObterLista()
+        {
+            var alunos = await _alunoRepositorio.ObterLista();
+            var listAlunos = new List<AlunoDto>();
+
+            foreach (var aluno in alunos)
+            {
+                listAlunos.Add(new AlunoDto(aluno));
+            }
+
+            return listAlunos;
         }
     }
 }

@@ -8,6 +8,7 @@ using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -96,6 +97,7 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             var response = await _alunoService.ObterPorId(aluno.Id);
 
+            _alunoRepositorioMock.Verify(r => r.ObterPorId(aluno.Id), Times.Once);
             response.ToExpectedObject().ShouldMatch(new AlunoDto(aluno));
         }
 
@@ -107,6 +109,24 @@ namespace CursoOnline.Domain.Tests.Alunos
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.ObterPorId(_faker.Random.Guid()));
 
             error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveBuscarListaDeAlunos()
+        {
+            var quantidadeDeAlunos = _faker.Random.Int(0, 10);
+            var alunos = new List<Aluno>();
+            for (int i = 0; i < quantidadeDeAlunos; i++)
+            {
+                alunos.Add(AlunoBuilder.Novo().Build());
+            }
+
+            _alunoRepositorioMock.Setup(ar => ar.ObterLista()).ReturnsAsync(alunos);
+
+            var response = await _alunoService.ObterLista();
+
+            _alunoRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
+            Assert.Equal(response.Count, quantidadeDeAlunos);
         }
     }
 }
