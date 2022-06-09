@@ -14,5 +14,7 @@ namespace CursoOnline.Application.Contratos
         Task<AlunoDto> ObterPorId(Guid id);
 
         Task<List<AlunoDto>> ObterLista();
+
+        Task Deletar(Guid id);
     }
 }

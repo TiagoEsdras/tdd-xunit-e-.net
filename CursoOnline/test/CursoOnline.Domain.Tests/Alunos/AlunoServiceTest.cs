@@ -128,5 +128,22 @@ namespace CursoOnline.Domain.Tests.Alunos
             _alunoRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
             Assert.Equal(response.Count, quantidadeDeAlunos);
         }
+
+        [Fact]
+        public async Task DeveDeletarAlunoComIdInformado()
+        {
+            var quantidadeDeAlunos = _faker.Random.Int(1, 10);
+            var alunos = new List<Aluno>();
+            for (int i = 0; i < quantidadeDeAlunos; i++)
+            {
+                alunos.Add(AlunoBuilder.Novo().Build());
+            }
+
+            _alunoRepositorioMock.Setup(rb => rb.Deletar(alunos[0].Id));
+
+            await _alunoService.Deletar(alunos[0].Id);
+
+            _alunoRepositorioMock.Verify(r => r.Deletar(alunos[0].Id), Times.Once);
+        }
     }
 }

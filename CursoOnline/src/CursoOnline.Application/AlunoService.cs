@@ -61,5 +61,10 @@ namespace CursoOnline.Application
 
             return listAlunos;
         }
+
+        public async Task Deletar(Guid id)
+        {
+           await _alunoRepositorio.Deletar(id);
+        }
     }
 }
