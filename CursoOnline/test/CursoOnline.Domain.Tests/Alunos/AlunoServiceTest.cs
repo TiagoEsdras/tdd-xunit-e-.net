@@ -5,6 +5,7 @@ using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Tests.Builders;
+using ExpectedObjects;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -84,6 +85,18 @@ namespace CursoOnline.Domain.Tests.Alunos
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
 
             error.ComMensagem(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveBuscarAlunoPorId()
+        {
+            var aluno = AlunoBuilder.Novo().Build();
+
+            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(aluno.Id)).ReturnsAsync(aluno);
+
+            var response = await _alunoService.ObterPorId(aluno.Id);
+
+            response.ToExpectedObject().ShouldMatch(new AlunoDto(aluno));
         }
     }
 }

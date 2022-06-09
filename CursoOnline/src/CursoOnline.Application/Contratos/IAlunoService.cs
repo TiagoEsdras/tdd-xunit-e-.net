@@ -9,5 +9,7 @@ namespace CursoOnline.Application.Contratos
         Task Adicionar(CreateAlunoDto createAlunoDto);
 
         Task Atualizar(Guid id, UpdateAlunoDto alunoDto);
+
+        Task<AlunoDto> ObterPorId(Guid id);
     }
 }
