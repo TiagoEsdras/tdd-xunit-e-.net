@@ -3,6 +3,7 @@
     public static class ErroMessage
     {
         public const string NOME_INVALIDO = "Nome não pode ser nulo ou uma string vazia";
+        public const string ID_INVALIDO = "Id nãp pode ser uma string vazia ou um guid empty";
         public const string CPF_NULO_OU_VAZIO = "CPF não pode ser nulo ou uma string vazia";
         public const string EMAIL_NULO_OU_VAZIO = "Email não pode ser nulo ou uma string vazia";
         public const string CPF_INVALIDO = "Cpf inválido";
