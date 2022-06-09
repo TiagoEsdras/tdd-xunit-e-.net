@@ -34,7 +34,6 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             _updateAlunoDto = new UpdateAlunoDto
             {
-                Id = _faker.Random.Guid(),
                 Nome = _faker.Person.FullName,
             };
 
@@ -68,9 +67,9 @@ namespace CursoOnline.Domain.Tests.Alunos
         public async Task DeveAlterarNomeDoAluno()
         {
             var aluno = AlunoBuilder.Novo().Build();
-            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(_updateAlunoDto.Id)).ReturnsAsync(aluno);
+            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(aluno.Id)).ReturnsAsync(aluno);
 
-            await _alunoService.Atualizar(_updateAlunoDto);
+            await _alunoService.Atualizar(aluno.Id, _updateAlunoDto);
 
             Assert.Equal(_updateAlunoDto.Nome, aluno.Nome);
         }

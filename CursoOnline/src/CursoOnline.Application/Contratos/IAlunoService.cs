@@ -1,4 +1,5 @@
 ﻿using CursoOnline.Application.Dtos.Alunos;
+using System;
 using System.Threading.Tasks;
 
 namespace CursoOnline.Application.Contratos
@@ -7,6 +8,6 @@ namespace CursoOnline.Application.Contratos
     {
         Task Adicionar(CreateAlunoDto createAlunoDto);
 
-        Task Atualizar(UpdateAlunoDto alunoDto);
+        Task Atualizar(Guid id, UpdateAlunoDto alunoDto);
     }
 }
