@@ -48,10 +48,13 @@ namespace CursoOnline.Domain.Tests.Alunos
         [Fact]
         public async Task DeveAdicinarAluno()
         {
-            await _alunoService.Adicionar(_createAlunoDto);
+            var aluno = AlunoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
 
-            _repositorioBaseMock.Verify(r => r.Adicionar(It.Is<Aluno>(
-                c => c.Nome == _createAlunoDto.Nome && c.CPF == _createAlunoDto.CPF && c.Email == _createAlunoDto.Email)));
+            _repositorioBaseMock.Setup(rb => rb.Adicionar(It.IsAny<Aluno>())).ReturnsAsync(aluno);
+
+            var response = await _alunoService.Adicionar(_createAlunoDto);
+
+            response.ToExpectedObject().ShouldMatch(new AlunoDto(aluno));
         }
 
         [Fact]

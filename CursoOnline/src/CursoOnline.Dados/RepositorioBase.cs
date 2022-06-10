@@ -12,10 +12,11 @@ namespace CursoOnline.Dados
             _databaseContext = databaseContext;
         }
 
-        public async Task Adicionar(T entity)
+        public async Task<T> Adicionar(T entity)
         {
-            await _databaseContext.Set<T>().AddAsync(entity);
+            var alunoCriado = await _databaseContext.Set<T>().AddAsync(entity);
             await _databaseContext.SaveChangesAsync();
+            return alunoCriado.Entity;
         }
 
         public async Task Atualizar(T entity)

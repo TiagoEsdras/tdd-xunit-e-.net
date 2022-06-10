@@ -22,7 +22,7 @@ namespace CursoOnline.Application
             _alunoRepositorio = alunoRepositorio;
         }
 
-        public async Task Adicionar(CreateAlunoDto createAlunoDto)
+        public async Task<AlunoDto> Adicionar(CreateAlunoDto createAlunoDto)
         {
             var alunoJaExiste = await _alunoRepositorio.ObterPeloCPF(createAlunoDto.CPF);
             if (alunoJaExiste is not null)
@@ -30,9 +30,10 @@ namespace CursoOnline.Application
 
             if (!Enum.TryParse<PublicoAlvoEnum>(createAlunoDto.PublicoAlvo, out var publicoAlvo))
                 throw new ArgumentException(ErroMessage.PUBLICO_ALVO_INVALIDO);
+            
+            var alunoCriado = await _repositorioBase.Adicionar(new Aluno(createAlunoDto.Nome, createAlunoDto.CPF, createAlunoDto.Email, publicoAlvo));
 
-            var aluno = new Aluno(createAlunoDto.Nome, createAlunoDto.CPF, createAlunoDto.Email, publicoAlvo);
-            await _repositorioBase.Adicionar(aluno);
+            return new AlunoDto(alunoCriado);
         }
 
         public async Task Atualizar(Guid id, UpdateAlunoDto updateAlunoDto)

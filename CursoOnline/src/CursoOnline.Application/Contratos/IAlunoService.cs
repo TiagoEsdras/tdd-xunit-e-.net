@@ -7,7 +7,7 @@ namespace CursoOnline.Application.Contratos
 {
     public interface IAlunoService
     {
-        Task Adicionar(CreateAlunoDto createAlunoDto);
+        Task<AlunoDto> Adicionar(CreateAlunoDto createAlunoDto);
 
         Task Atualizar(Guid id, UpdateAlunoDto alunoDto);
 

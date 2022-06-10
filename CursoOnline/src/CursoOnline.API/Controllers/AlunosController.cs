@@ -19,13 +19,13 @@ namespace CursoOnline.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> Post(CreateAlunoDto createAlunoDto)
         {
             try
             {
-                await _alunoService.Adicionar(createAlunoDto);
-                return new OkResult();
+                var alunoCriado = await _alunoService.Adicionar(createAlunoDto);
+                return Ok(alunoCriado);
             }
             catch (Exception ex)
             {
