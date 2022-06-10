@@ -55,6 +55,18 @@ namespace CursoOnline.Domain.Tests.Alunos
         }
 
         [Fact]
+        public async Task NaoDeveAdicionarAlunoComMesmoCPFDeOutroAlunoJaSalvo()
+        {
+            var alunoJaSalvo = AlunoBuilder.Novo().ComCPF(_createAlunoDto.CPF).Build();
+
+            _alunoRepositorioMock.Setup(ar => ar.ObterPeloCPF(_createAlunoDto.CPF)).ReturnsAsync(alunoJaSalvo);
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
+
+            error.ComMensagem(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
+        }
+
+        [Fact]
         public async Task NaoDeveInformarPublicoAlvoInvalido()
         {
             var publicoAlvoInvalido = "Medico";
@@ -77,21 +89,25 @@ namespace CursoOnline.Domain.Tests.Alunos
         }
 
         [Fact]
-        public async Task NaoDeveAdicionarAlunoComMesmoCPFDeOutroAlunoJaSalvo()
+        public async Task DeveRetornarErroQuandoAoTentarAtualizarAlunoENaoExistirRegistro()
         {
-            var alunoJaSalvo = AlunoBuilder.Novo().ComCPF(_createAlunoDto.CPF).Build();
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Atualizar(_faker.Random.Guid(), _updateAlunoDto));
 
-            _alunoRepositorioMock.Setup(ar => ar.ObterPeloCPF(_createAlunoDto.CPF)).ReturnsAsync(alunoJaSalvo);
+            error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);
+        }
 
-            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoTentarAtualizarAlunoEIdPassadoEUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Atualizar(Guid.Empty, _updateAlunoDto));
 
-            error.ComMensagem(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
         }
 
         [Fact]
         public async Task DeveBuscarAlunoPorId()
         {
-            var aluno = AlunoBuilder.Novo().Build();
+            var aluno = AlunoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
 
             _alunoRepositorioMock.Setup(ar => ar.ObterPorId(aluno.Id)).ReturnsAsync(aluno);
 
@@ -102,7 +118,15 @@ namespace CursoOnline.Domain.Tests.Alunos
         }
 
         [Fact]
-        public async Task DeveRetornarErroQuandoIdDoAlunoNaoExiste()
+        public async Task DeveRetornarErroQuandoAoBuscarAlunoPorIdForPassadoUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.ObterPorId(Guid.Empty));
+
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
+        }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoBuscarAlunoPorIdNaoExistirRegistro()
         {
             _alunoRepositorioMock.Setup(ar => ar.ObterPorId(_faker.Random.Guid())).ThrowsAsync(new ArgumentException(message: ErroMessage.ALUNO_NAO_EXISTENTE));
 
@@ -149,8 +173,6 @@ namespace CursoOnline.Domain.Tests.Alunos
         [Fact]
         public async Task DeveRetornarErroAoTentarDeletarAlunoQuandoIdDoAlunoNaoExiste()
         {
-            _alunoRepositorioMock.Setup(ar => ar.Deletar(It.IsAny<Aluno>())).ThrowsAsync(new ArgumentException(message: ErroMessage.ALUNO_NAO_EXISTENTE));
-
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Deletar(_faker.Random.Guid()));
 
             error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);

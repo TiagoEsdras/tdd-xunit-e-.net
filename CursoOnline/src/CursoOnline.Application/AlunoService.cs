@@ -36,16 +36,29 @@ namespace CursoOnline.Application
 
         public async Task Atualizar(Guid id, UpdateAlunoDto updateAlunoDto)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(ErroMessage.ID_INVALIDO);
+
             var aluno = await _alunoRepositorio.ObterPorId(id);
+
+            if (aluno is null)
+                throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
+
             aluno.AlterarNome(updateAlunoDto.Nome);
+
             await _repositorioBase.Atualizar(aluno);
         }
 
         public async Task<AlunoDto> ObterPorId(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(ErroMessage.ID_INVALIDO);
+
             var aluno = await _alunoRepositorio.ObterPorId(id);
+
             if (aluno is null)
                 throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
+
             return new AlunoDto(aluno);
         }
 
