@@ -177,5 +177,13 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             error.ComMensagem(ErroMessage.ALUNO_NAO_EXISTENTE);
         }
+
+        [Fact]
+        public async Task DeveRetornarErroAoTentarDeletarAlunoQuandoIdPassadoForPassadoUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Deletar(Guid.Empty));
+
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
+        }
     }
 }

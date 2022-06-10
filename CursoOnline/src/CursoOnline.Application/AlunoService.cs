@@ -4,6 +4,7 @@ using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,13 +37,11 @@ namespace CursoOnline.Application
 
         public async Task Atualizar(Guid id, UpdateAlunoDto updateAlunoDto)
         {
-            if (id == Guid.Empty)
-                throw new ArgumentException(ErroMessage.ID_INVALIDO);
+            ValidadorDeGuid.IsValid(id);
 
             var aluno = await _alunoRepositorio.ObterPorId(id);
 
-            if (aluno is null)
-                throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
+            LancarExcecaoQuandoAlunoEhNulo(aluno);
 
             aluno.AlterarNome(updateAlunoDto.Nome);
 
@@ -51,13 +50,11 @@ namespace CursoOnline.Application
 
         public async Task<AlunoDto> ObterPorId(Guid id)
         {
-            if (id == Guid.Empty)
-                throw new ArgumentException(ErroMessage.ID_INVALIDO);
+            ValidadorDeGuid.IsValid(id);
 
             var aluno = await _alunoRepositorio.ObterPorId(id);
 
-            if (aluno is null)
-                throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
+            LancarExcecaoQuandoAlunoEhNulo(aluno);
 
             return new AlunoDto(aluno);
         }
@@ -77,10 +74,19 @@ namespace CursoOnline.Application
 
         public async Task Deletar(Guid id)
         {
+            ValidadorDeGuid.IsValid(id);
+
             var aluno = await _alunoRepositorio.ObterPorId(id);
+
+            LancarExcecaoQuandoAlunoEhNulo(aluno);
+
+            await _alunoRepositorio.Deletar(aluno);
+        }
+
+        private static void LancarExcecaoQuandoAlunoEhNulo(Aluno aluno)
+        {
             if (aluno is null)
                 throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
-            await _alunoRepositorio.Deletar(aluno);
         }
     }
 }
