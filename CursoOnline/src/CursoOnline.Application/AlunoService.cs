@@ -64,10 +64,8 @@ namespace CursoOnline.Application
 
         public async Task Deletar(Guid id)
         {
-            if (id == Guid.Empty)
-                throw new ArgumentException(ErroMessage.ID_INVALIDO);
             var aluno = await _alunoRepositorio.ObterPorId(id);
-            if(aluno is null)
+            if (aluno is null)
                 throw new ArgumentException(ErroMessage.ALUNO_NAO_EXISTENTE);
             await _alunoRepositorio.Deletar(aluno);
         }
