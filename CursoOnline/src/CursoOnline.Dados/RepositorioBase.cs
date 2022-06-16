@@ -19,10 +19,11 @@ namespace CursoOnline.Dados
             return alunoCriado.Entity;
         }
 
-        public async Task Atualizar(T entity)
+        public async Task<T> Atualizar(T entity)
         {
-            _databaseContext.Set<T>().Update(entity);
+            var alunoAtualizado = _databaseContext.Set<T>().Update(entity);
             await _databaseContext.SaveChangesAsync();
+            return alunoAtualizado.Entity;
         }
     }
 }

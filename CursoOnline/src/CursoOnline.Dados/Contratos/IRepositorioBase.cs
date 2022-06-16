@@ -6,6 +6,6 @@ namespace CursoOnline.Dados.Contratos
     {
         Task<T> Adicionar(T entity);
 
-        Task Atualizar(T entity);
+        Task<T> Atualizar(T entity);
     }
 }

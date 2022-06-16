@@ -36,7 +36,7 @@ namespace CursoOnline.Application
             return new AlunoDto(alunoCriado);
         }
 
-        public async Task Atualizar(Guid id, UpdateAlunoDto updateAlunoDto)
+        public async Task<AlunoDto> Atualizar(Guid id, UpdateAlunoDto updateAlunoDto)
         {
             ValidadorDeGuid.IsValid(id);
 
@@ -46,7 +46,9 @@ namespace CursoOnline.Application
 
             aluno.AlterarNome(updateAlunoDto.Nome);
 
-            await _repositorioBase.Atualizar(aluno);
+            var alunoAtualizado = await _repositorioBase.Atualizar(aluno);
+
+            return new AlunoDto(alunoAtualizado);
         }
 
         public async Task<AlunoDto> ObterPorId(Guid id)

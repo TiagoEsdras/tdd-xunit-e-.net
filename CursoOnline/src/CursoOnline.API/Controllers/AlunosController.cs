@@ -34,13 +34,13 @@ namespace CursoOnline.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> Update(Guid id, UpdateAlunoDto updateAlunoDto)
         {
             try
             {
-                await _alunoService.Atualizar(id, updateAlunoDto);
-                return new OkResult();
+                var alunoAtualizado = await _alunoService.Atualizar(id, updateAlunoDto);
+                return Ok(alunoAtualizado);
             }
             catch (Exception ex)
             {

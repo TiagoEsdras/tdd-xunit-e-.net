@@ -83,12 +83,20 @@ namespace CursoOnline.Domain.Tests.Alunos
         [Fact]
         public async Task DeveAlterarNomeDoAluno()
         {
-            var aluno = AlunoBuilder.Novo().Build();
+            var aluno = AlunoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
             _alunoRepositorioMock.Setup(ar => ar.ObterPorId(aluno.Id)).ReturnsAsync(aluno);
 
-            await _alunoService.Atualizar(aluno.Id, _updateAlunoDto);
+            var alunoEditado = AlunoBuilder.Novo()
+                .ComId(aluno.Id)
+                .ComNome(_updateAlunoDto.Nome)
+                .ComCPF(aluno.CPF)
+                .Build();
+                
+            _repositorioBaseMock.Setup(rb => rb.Atualizar(It.IsAny<Aluno>())).ReturnsAsync(alunoEditado);
 
-            Assert.Equal(_updateAlunoDto.Nome, aluno.Nome);
+            var response = await _alunoService.Atualizar(aluno.Id, _updateAlunoDto);
+
+            response.ToExpectedObject().ShouldMatch(new AlunoDto(alunoEditado));
         }
 
         [Fact]
