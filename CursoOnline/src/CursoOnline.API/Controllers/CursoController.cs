@@ -34,13 +34,13 @@ namespace CursoOnline.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> Post(CreateCursoDto cursoDto)
         {
             try
             {
-                await _cursoService.Adicionar(cursoDto);
-                return new OkResult();
+                var cursoCriado = await _cursoService.Adicionar(cursoDto);
+                return Ok(cursoCriado);
             }
             catch (Exception ex)
             {

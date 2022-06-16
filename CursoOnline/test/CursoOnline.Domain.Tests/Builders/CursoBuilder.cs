@@ -1,11 +1,13 @@
 ﻿using Bogus;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
+using System;
 
 namespace CursoOnline.Domain.Tests.Builders
 {
     public class CursoBuilder
     {
+        private Guid _id;
         private string _nome;
         private string _descricao;
         private int _cargaHoraria;
@@ -14,7 +16,8 @@ namespace CursoOnline.Domain.Tests.Builders
 
         public CursoBuilder()
         {
-            var faker = new Faker();
+            var faker = new Faker("pt_BR");
+            _id = faker.Random.Guid();
             _nome = faker.Random.Word();
             _descricao = faker.Lorem.Paragraph();
             _cargaHoraria = faker.Random.Int(50, 100);
@@ -57,9 +60,22 @@ namespace CursoOnline.Domain.Tests.Builders
             return this;
         }
 
+        public CursoBuilder ComId(Guid id)
+        {
+            _id = id;
+            return this;
+        }
+
         public Curso Build()
         {
-            return new Curso(_nome, _descricao, _cargaHoraria, _publicoAlvo, _valor);
+            var curso = new Curso(_nome, _descricao, _cargaHoraria, _publicoAlvo, _valor);
+
+            if (_id != Guid.Empty)
+            {
+                var propertyInfo = curso.GetType().GetProperty("Id");
+                propertyInfo.SetValue(curso, Convert.ChangeType(_id, propertyInfo.PropertyType), null);
+            }
+            return curso;
         }
     }
 }

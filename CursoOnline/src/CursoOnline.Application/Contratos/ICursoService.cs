@@ -6,7 +6,7 @@ namespace CursoOnline.Application.Contratos
 {
     public interface ICursoService
     {
-        Task Adicionar(CreateCursoDto cursoDto);
+        Task<CursoDto> Adicionar(CreateCursoDto cursoDto);
 
         Task Atualizar(CursoDto cursoDto);
 

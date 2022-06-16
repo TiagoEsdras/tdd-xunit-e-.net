@@ -5,6 +5,7 @@ using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Tests.Builders;
+using ExpectedObjects;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -53,10 +54,12 @@ namespace CursoOnline.Domain.Tests.Cursos
         [Fact]
         public async Task DeveAdicinarCurso()
         {
-            await _cursoService.Adicionar(_createCursoDto);
+            var curso = CursoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
+            _repositorioBaseMock.Setup(rb => rb.Adicionar(It.IsAny<Curso>())).ReturnsAsync(curso);
 
-            _repositorioBaseMock.Verify(r => r.Adicionar(It.Is<Curso>(
-                c => c.Nome == _createCursoDto.Nome && c.Descricao == _createCursoDto.Descricao)));
+            var response = await _cursoService.Adicionar(_createCursoDto);
+
+            response.ToExpectedObject().ShouldMatch(new CursoDto(curso));
         }
 
         [Fact]
