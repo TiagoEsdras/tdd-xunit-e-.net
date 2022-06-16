@@ -47,5 +47,20 @@ namespace CursoOnline.API.Controllers
                 return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
             }
         }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(200, Type = typeof(CursoDto))]
+        public async Task<IActionResult> Update(Guid id, UpdateCursoDto cursoDto)
+        {
+            try
+            {
+                var cursoAtualizado = await _cursoService.Atualizar(id, cursoDto);
+                return Ok(cursoAtualizado);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }

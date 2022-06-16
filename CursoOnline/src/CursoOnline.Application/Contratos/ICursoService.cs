@@ -1,4 +1,5 @@
 ﻿using CursoOnline.Application.Dtos.Cursos;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace CursoOnline.Application.Contratos
     {
         Task<CursoDto> Adicionar(CreateCursoDto cursoDto);
 
-        Task Atualizar(CursoDto cursoDto);
+        Task<CursoDto> Atualizar(Guid id, UpdateCursoDto cursoDto);
 
         Task<List<CursoDto>> ObterCursos();
     }

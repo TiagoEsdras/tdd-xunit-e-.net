@@ -36,14 +36,15 @@ namespace CursoOnline.Application
             return new CursoDto(cursoCriado);
         }
 
-        public async Task Atualizar(CursoDto cursoDto)
+        public async Task<CursoDto> Atualizar(Guid id, UpdateCursoDto cursoDto)
         {
-            var curso = await _cursoRepositorio.ObterPorId(cursoDto.Id);
+            var curso = await _cursoRepositorio.ObterPorId(id);
             curso.AlterarNome(cursoDto.Nome);
             curso.AlterarDescricao(cursoDto.Descricao);
             curso.AlterarCargaHoraria(cursoDto.CargaHoraria);
             curso.AlterarValor(cursoDto.Valor);
-            await _repositorioBase.Atualizar(curso);
+            var cursoAtualizado = await _repositorioBase.Atualizar(curso);
+            return new CursoDto(cursoAtualizado);
         }
 
         public async Task<List<CursoDto>> ObterCursos()

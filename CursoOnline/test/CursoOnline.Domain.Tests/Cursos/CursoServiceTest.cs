@@ -4,6 +4,7 @@ using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using Moq;
@@ -16,7 +17,7 @@ namespace CursoOnline.Domain.Tests.Cursos
     public class CursoServiceTest
     {
         private readonly CreateCursoDto _createCursoDto;
-        private readonly CursoDto _cursoDto;
+        private readonly UpdateCursoDto _updateCursoDto;
         private readonly Mock<ICursoRepositorio> _cursoRepositorioMock;
         private readonly Mock<IRepositorioBase<Curso>> _repositorioBaseMock;
         private readonly CursoService _cursoService;
@@ -35,13 +36,11 @@ namespace CursoOnline.Domain.Tests.Cursos
                 Valor = _faker.Random.Decimal(500, 1000)
             };
 
-            _cursoDto = new CursoDto
+            _updateCursoDto = new UpdateCursoDto
             {
-                Id = _faker.Random.Guid(),
                 Nome = _faker.Random.Word(),
                 Descricao = _faker.Lorem.Paragraph(),
                 CargaHoraria = _faker.Random.Int(50, 100),
-                PublicoAlvo = "Estudante",
                 Valor = _faker.Random.Decimal(500, 1000)
             };
 
@@ -88,15 +87,22 @@ namespace CursoOnline.Domain.Tests.Cursos
         [Fact]
         public async Task DeveAlterarDadosDoCurso()
         {
-            var curso = CursoBuilder.Novo().Build();
-            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(_cursoDto.Id)).ReturnsAsync(curso);
+            var curso = CursoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
+            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(curso.Id)).ReturnsAsync(curso);
 
-            await _cursoService.Atualizar(_cursoDto);
+            var cursoAtualizado = CursoBuilder.Novo()
+                .ComId(curso.Id)
+                .ComNome(_updateCursoDto.Nome)
+                .ComDescricao(_updateCursoDto.Descricao)
+                .ComCargaHoraria(_updateCursoDto.CargaHoraria)
+                .ComValor(_updateCursoDto.Valor)
+                .Build();
 
-            Assert.Equal(_cursoDto.Nome, curso.Nome);
-            Assert.Equal(_cursoDto.Valor, curso.Valor);
-            Assert.Equal(_cursoDto.CargaHoraria, curso.CargaHoraria);
-            Assert.Equal(_cursoDto.Descricao, curso.Descricao);
+            _repositorioBaseMock.Setup(rb => rb.Atualizar(It.IsAny<Curso>())).ReturnsAsync(cursoAtualizado);
+
+            var response = await _cursoService.Atualizar(curso.Id, _updateCursoDto);
+
+            response.ToExpectedObject().ShouldMatch(new CursoDto(cursoAtualizado));
         }
     }
 }
