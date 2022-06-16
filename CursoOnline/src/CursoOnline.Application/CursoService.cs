@@ -38,6 +38,9 @@ namespace CursoOnline.Application
 
         public async Task<CursoDto> Atualizar(Guid id, UpdateCursoDto cursoDto)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(ErroMessage.ID_INVALIDO);
+
             var curso = await _cursoRepositorio.ObterPorId(id);
 
             if (curso is null)

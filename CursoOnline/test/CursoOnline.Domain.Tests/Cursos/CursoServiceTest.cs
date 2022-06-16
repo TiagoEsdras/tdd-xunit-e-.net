@@ -4,7 +4,6 @@ using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
-using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using Moq;
@@ -111,6 +110,14 @@ namespace CursoOnline.Domain.Tests.Cursos
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Atualizar(_faker.Random.Guid(), _updateCursoDto));
 
             error.ComMensagem(ErroMessage.CURSO_NAO_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoTentarAtualizarCursoEIdPassadoEUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Atualizar(Guid.Empty, _updateCursoDto));
+
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
         }
     }
 }
