@@ -39,6 +39,10 @@ namespace CursoOnline.Application
         public async Task<CursoDto> Atualizar(Guid id, UpdateCursoDto cursoDto)
         {
             var curso = await _cursoRepositorio.ObterPorId(id);
+
+            if (curso is null)
+                throw new ArgumentException(ErroMessage.CURSO_NAO_EXISTENTE);
+
             curso.AlterarNome(cursoDto.Nome);
             curso.AlterarDescricao(cursoDto.Descricao);
             curso.AlterarCargaHoraria(cursoDto.CargaHoraria);

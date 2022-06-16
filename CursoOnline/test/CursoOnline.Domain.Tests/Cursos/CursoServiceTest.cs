@@ -104,5 +104,13 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             response.ToExpectedObject().ShouldMatch(new CursoDto(cursoAtualizado));
         }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoTentarAtualizarCursoENaoExistirRegistro()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Atualizar(_faker.Random.Guid(), _updateCursoDto));
+
+            error.ComMensagem(ErroMessage.CURSO_NAO_EXISTENTE);
+        }
     }
 }
