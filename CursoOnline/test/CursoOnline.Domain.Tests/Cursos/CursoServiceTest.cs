@@ -8,6 +8,7 @@ using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -149,6 +150,24 @@ namespace CursoOnline.Domain.Tests.Cursos
             var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.ObterPorId(_faker.Random.Guid()));
 
             error.ComMensagem(ErroMessage.CURSO_NAO_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveBuscarListaDeCursos()
+        {
+            var quantidadeDeCursos = _faker.Random.Int(0, 10);
+            var cursos = new List<Curso>();
+            for (int i = 0; i < quantidadeDeCursos; i++)
+            {
+                cursos.Add(CursoBuilder.Novo().Build());
+            }
+
+            _cursoRepositorioMock.Setup(cr => cr.ObterLista()).ReturnsAsync(cursos);
+
+            var response = await _cursoService.ObterCursos();
+
+            _cursoRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
+            Assert.Equal(response.Count, quantidadeDeCursos);
         }
     }
 }
