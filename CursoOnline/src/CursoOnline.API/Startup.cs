@@ -28,6 +28,7 @@ namespace CursoOnline.API
 
             services.AddScoped<ICursoService, CursoService>();
             services.AddScoped<IAlunoService, AlunoService>();
+            services.AddScoped<IConversorPublicoAlvo, ConversorPublicoAlvo>();
 
             services.AddScoped(typeof(IRepositorioBase<>), typeof(RepositorioBase<>));
             services.AddScoped<ICursoRepositorio, CursoRepositorio>();
