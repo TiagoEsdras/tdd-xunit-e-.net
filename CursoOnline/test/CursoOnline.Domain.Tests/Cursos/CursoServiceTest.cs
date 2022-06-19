@@ -169,5 +169,38 @@ namespace CursoOnline.Domain.Tests.Cursos
             _cursoRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
             Assert.Equal(response.Count, quantidadeDeCursos);
         }
+
+        [Fact]
+        public async Task DeveDeletarCursoComIdInformado()
+        {
+            var quantidadeDeCursos = _faker.Random.Int(1, 10);
+            var cursos = new List<Curso>();
+            for (int i = 0; i < quantidadeDeCursos; i++)
+            {
+                cursos.Add(CursoBuilder.Novo().Build());
+            }
+
+            _cursoRepositorioMock.Setup(rb => rb.ObterPorId(cursos[0].Id)).ReturnsAsync(cursos[0]);
+
+            await _cursoService.Deletar(cursos[0].Id);
+
+            _cursoRepositorioMock.Verify(r => r.Deletar(cursos[0]), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeveRetornarErroAoTentarDeletarCursoQuandoIdDoCursoNaoExiste()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Deletar(_faker.Random.Guid()));
+
+            error.ComMensagem(ErroMessage.CURSO_NAO_EXISTENTE);
+        }
+
+        [Fact]
+        public async Task DeveRetornarErroAoTentarDeletarCursoQuandoIdPassadoForPassadoUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Deletar(Guid.Empty));
+
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
+        }
     }
 }

@@ -31,5 +31,11 @@ namespace CursoOnline.Dados
         {
             return await _databaseContext.Cursos.ToListAsync();
         }
+
+        public async Task Deletar(Curso curso)
+        {
+            _databaseContext.Cursos.Remove(curso);
+            await _databaseContext.SaveChangesAsync();
+        }
     }
 }

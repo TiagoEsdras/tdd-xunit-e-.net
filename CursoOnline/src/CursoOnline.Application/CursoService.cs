@@ -68,6 +68,14 @@ namespace CursoOnline.Application
             return new CursoDto(curso);
         }
 
+        public async Task Deletar(Guid id)
+        {
+            ValidadorDeGuid.IsValid(id);
+            var curso = await _cursoRepositorio.ObterPorId(id);
+            LancarExcecaoQuandoCursoEhNulo(curso);
+            await _cursoRepositorio.Deletar(curso);
+        }
+
         private static void LancarExcecaoQuandoCursoEhNulo(Curso curso)
         {
             if (curso is null)

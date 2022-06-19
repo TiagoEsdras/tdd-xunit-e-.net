@@ -77,5 +77,20 @@ namespace CursoOnline.API.Controllers
                 return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
             }
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _cursoService.Deletar(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
     }
 }

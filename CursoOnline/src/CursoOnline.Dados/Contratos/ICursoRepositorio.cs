@@ -12,5 +12,7 @@ namespace CursoOnline.Dados.Contratos
         Task<Curso> ObterPorId(Guid id);
 
         Task<List<Curso>> ObterLista();
+
+        Task Deletar(Curso curso);
     }
 }
