@@ -132,5 +132,13 @@ namespace CursoOnline.Domain.Tests.Cursos
             _cursoRepositorioMock.Verify(r => r.ObterPorId(curso.Id), Times.Once);
             response.ToExpectedObject().ShouldMatch(new CursoDto(curso));
         }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoBuscarCursoPorIdForPassadoUmEmptyGuid()
+        {
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.ObterPorId(Guid.Empty));
+
+            error.ComMensagem(ErroMessage.ID_INVALIDO);
+        }
     }
 }

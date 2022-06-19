@@ -4,6 +4,7 @@ using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Enums;
+using CursoOnline.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,7 @@ namespace CursoOnline.Application
 
         public async Task<CursoDto> ObterPorId(Guid id)
         {
+            ValidadorDeGuid.IsValid(id);
             var curso = await _cursoRepositorio.ObterPorId(id);
             return new CursoDto(curso);
         }
