@@ -33,21 +33,6 @@ namespace CursoOnline.API.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> Update(Guid id, UpdateAlunoDto updateAlunoDto)
-        {
-            try
-            {
-                var alunoAtualizado = await _alunoService.Atualizar(id, updateAlunoDto);
-                return Ok(alunoAtualizado);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
-            }
-        }
-
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(AlunoDto))]
         public async Task<IActionResult> GetById(Guid id)
@@ -71,6 +56,21 @@ namespace CursoOnline.API.Controllers
             {
                 var alunos = await _alunoService.ObterLista();
                 return Ok(alunos);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(200, Type = typeof(AlunoDto))]
+        public async Task<IActionResult> Update(Guid id, UpdateAlunoDto updateAlunoDto)
+        {
+            try
+            {
+                var alunoAtualizado = await _alunoService.Atualizar(id, updateAlunoDto);
+                return Ok(alunoAtualizado);
             }
             catch (Exception ex)
             {

@@ -9,13 +9,28 @@ namespace CursoOnline.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CursoController : ControllerBase
+    public class CursosController : ControllerBase
     {
         private readonly ICursoService _cursoService;
 
-        public CursoController(ICursoService cursoService)
+        public CursosController(ICursoService cursoService)
         {
             _cursoService = cursoService;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(CursoDto))]
+        public async Task<IActionResult> Post(CreateCursoDto cursoDto)
+        {
+            try
+            {
+                var cursoCriado = await _cursoService.Adicionar(cursoDto);
+                return Ok(cursoCriado);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
         }
 
         [HttpGet]
@@ -41,21 +56,6 @@ namespace CursoOnline.API.Controllers
             {
                 var curso = await _cursoService.ObterPorId(id);
                 return Ok(curso);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
-            }
-        }
-
-        [HttpPost]
-        [ProducesResponseType(200, Type = typeof(CursoDto))]
-        public async Task<IActionResult> Post(CreateCursoDto cursoDto)
-        {
-            try
-            {
-                var cursoCriado = await _cursoService.Adicionar(cursoDto);
-                return Ok(cursoCriado);
             }
             catch (Exception ex)
             {
