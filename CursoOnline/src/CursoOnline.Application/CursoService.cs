@@ -3,7 +3,6 @@ using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
-using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -16,11 +15,13 @@ namespace CursoOnline.Application
     {
         private readonly IRepositorioBase<Curso> _repositorioBase;
         private readonly ICursoRepositorio _cursoRepositorio;
+        private readonly IConversorPublicoAlvo _conversorPublicoAlvo;
 
-        public CursoService(IRepositorioBase<Curso> repositorioBase, ICursoRepositorio cursoRepositorio)
+        public CursoService(IRepositorioBase<Curso> repositorioBase, ICursoRepositorio cursoRepositorio, IConversorPublicoAlvo conversorPublicoAlvo)
         {
             _repositorioBase = repositorioBase;
             _cursoRepositorio = cursoRepositorio;
+            _conversorPublicoAlvo = conversorPublicoAlvo;
         }
 
         public async Task<CursoDto> Adicionar(CreateCursoDto cursoDto)
@@ -30,8 +31,7 @@ namespace CursoOnline.Application
             if (cursoJaSalvo != null)
                 throw new ArgumentException(ErroMessage.NOME_DO_CURSO_JA_EXISTENTE);
 
-            if (!Enum.TryParse<PublicoAlvoEnum>(cursoDto.PublicoAlvo, out var publicoAlvo))
-                throw new ArgumentException(ErroMessage.PUBLICO_ALVO_INVALIDO);
+            var publicoAlvo = _conversorPublicoAlvo.Converter(cursoDto.PublicoAlvo);
 
             var cursoCriado = await _repositorioBase.Adicionar(new Curso(cursoDto.Nome, cursoDto.Descricao, cursoDto.CargaHoraria, publicoAlvo, cursoDto.Valor));
             return new CursoDto(cursoCriado);

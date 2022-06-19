@@ -3,7 +3,6 @@ using CursoOnline.Application.Dtos.Alunos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
-using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -15,11 +14,13 @@ namespace CursoOnline.Application
     {
         private readonly IRepositorioBase<Aluno> _repositorioBase;
         private readonly IAlunoRepositorio _alunoRepositorio;
+        private readonly IConversorPublicoAlvo _conversorPublicoAlvo;
 
-        public AlunoService(IRepositorioBase<Aluno> repositorioBase, IAlunoRepositorio alunoRepositorio)
+        public AlunoService(IRepositorioBase<Aluno> repositorioBase, IAlunoRepositorio alunoRepositorio, IConversorPublicoAlvo conversorPublicoAlvo)
         {
             _repositorioBase = repositorioBase;
             _alunoRepositorio = alunoRepositorio;
+            _conversorPublicoAlvo = conversorPublicoAlvo;
         }
 
         public async Task<AlunoDto> Adicionar(CreateAlunoDto createAlunoDto)
@@ -28,9 +29,8 @@ namespace CursoOnline.Application
             if (alunoJaExiste is not null)
                 throw new ArgumentException(ErroMessage.ALUNO_COM_CPF_JA_EXISTENTE);
 
-            if (!Enum.TryParse<PublicoAlvoEnum>(createAlunoDto.PublicoAlvo, out var publicoAlvo))
-                throw new ArgumentException(ErroMessage.PUBLICO_ALVO_INVALIDO);
-            
+            var publicoAlvo = _conversorPublicoAlvo.Converter(createAlunoDto.PublicoAlvo);
+
             var alunoCriado = await _repositorioBase.Adicionar(new Aluno(createAlunoDto.Nome, createAlunoDto.CPF, createAlunoDto.Email, publicoAlvo));
 
             return new AlunoDto(alunoCriado);

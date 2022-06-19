@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using CursoOnline.Application;
+using CursoOnline.Application.Contratos;
 using CursoOnline.Application.Dtos.Alunos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
@@ -21,6 +22,7 @@ namespace CursoOnline.Domain.Tests.Alunos
         private readonly UpdateAlunoDto _updateAlunoDto;
         private readonly Mock<IRepositorioBase<Aluno>> _repositorioBaseMock;
         private readonly Mock<IAlunoRepositorio> _alunoRepositorioMock;
+        private readonly Mock<IConversorPublicoAlvo> _conversorPublicoAlvoMock;
         private readonly Faker _faker;
 
         public AlunoServiceTest()
@@ -41,8 +43,9 @@ namespace CursoOnline.Domain.Tests.Alunos
 
             _alunoRepositorioMock = new Mock<IAlunoRepositorio>();
             _repositorioBaseMock = new Mock<IRepositorioBase<Aluno>>();
+            _conversorPublicoAlvoMock = new Mock<IConversorPublicoAlvo>();
 
-            _alunoService = new AlunoService(_repositorioBaseMock.Object, _alunoRepositorioMock.Object);
+            _alunoService = new AlunoService(_repositorioBaseMock.Object, _alunoRepositorioMock.Object, _conversorPublicoAlvoMock.Object);
         }
 
         [Fact]
@@ -70,17 +73,6 @@ namespace CursoOnline.Domain.Tests.Alunos
         }
 
         [Fact]
-        public async Task NaoDeveInformarPublicoAlvoInvalido()
-        {
-            var publicoAlvoInvalido = "Medico";
-            _createAlunoDto.PublicoAlvo = publicoAlvoInvalido;
-
-            var error = await Assert.ThrowsAsync<ArgumentException>(() => _alunoService.Adicionar(_createAlunoDto));
-
-            error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
-        }
-
-        [Fact]
         public async Task DeveAlterarNomeDoAluno()
         {
             var aluno = AlunoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
@@ -91,7 +83,7 @@ namespace CursoOnline.Domain.Tests.Alunos
                 .ComNome(_updateAlunoDto.Nome)
                 .ComCPF(aluno.CPF)
                 .Build();
-                
+
             _repositorioBaseMock.Setup(rb => rb.Atualizar(It.IsAny<Aluno>())).ReturnsAsync(alunoEditado);
 
             var response = await _alunoService.Atualizar(aluno.Id, _updateAlunoDto);

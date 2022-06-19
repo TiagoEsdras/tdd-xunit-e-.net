@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using CursoOnline.Application;
+using CursoOnline.Application.Contratos;
 using CursoOnline.Application.Dtos.Cursos;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Constants;
@@ -20,6 +21,7 @@ namespace CursoOnline.Domain.Tests.Cursos
         private readonly UpdateCursoDto _updateCursoDto;
         private readonly Mock<ICursoRepositorio> _cursoRepositorioMock;
         private readonly Mock<IRepositorioBase<Curso>> _repositorioBaseMock;
+        private readonly Mock<IConversorPublicoAlvo> _conversorPublicoAlvoMock;
         private readonly CursoService _cursoService;
         private readonly Faker _faker;
 
@@ -46,8 +48,9 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             _cursoRepositorioMock = new Mock<ICursoRepositorio>();
             _repositorioBaseMock = new Mock<IRepositorioBase<Curso>>();
+            _conversorPublicoAlvoMock = new Mock<IConversorPublicoAlvo>();
 
-            _cursoService = new CursoService(_repositorioBaseMock.Object, _cursoRepositorioMock.Object);
+            _cursoService = new CursoService(_repositorioBaseMock.Object, _cursoRepositorioMock.Object, _conversorPublicoAlvoMock.Object);
         }
 
         [Fact]
@@ -59,17 +62,6 @@ namespace CursoOnline.Domain.Tests.Cursos
             var response = await _cursoService.Adicionar(_createCursoDto);
 
             response.ToExpectedObject().ShouldMatch(new CursoDto(curso));
-        }
-
-        [Fact]
-        public async Task NaoDeveInformarPublicoAlvoInvalido()
-        {
-            var publicoAlvoInvalido = "Medico";
-            _createCursoDto.PublicoAlvo = publicoAlvoInvalido;
-
-            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.Adicionar(_createCursoDto));
-
-            error.ComMensagem(ErroMessage.PUBLICO_ALVO_INVALIDO);
         }
 
         [Fact]
