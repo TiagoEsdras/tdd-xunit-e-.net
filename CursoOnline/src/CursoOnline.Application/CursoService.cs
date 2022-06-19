@@ -59,5 +59,11 @@ namespace CursoOnline.Application
             var cursos = await _cursoRepositorio.ObterLista();
             return cursos.Select(curso => new CursoDto(curso)).ToList();
         }
+
+        public async Task<CursoDto> ObterPorId(Guid id)
+        {
+            var curso = await _cursoRepositorio.ObterPorId(id);
+            return new CursoDto(curso);
+        }
     }
 }

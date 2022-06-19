@@ -33,6 +33,21 @@ namespace CursoOnline.API.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(200, Type = typeof(CursoDto))]
+        public async Task<IActionResult> GetBiId(Guid id)
+        {
+            try
+            {
+                var curso = await _cursoService.ObterPorId(id);
+                return Ok(curso);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message }) { StatusCode = 500 };
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> Post(CreateCursoDto cursoDto)

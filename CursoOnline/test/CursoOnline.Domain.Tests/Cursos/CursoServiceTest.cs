@@ -119,5 +119,18 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             error.ComMensagem(ErroMessage.ID_INVALIDO);
         }
+
+        [Fact]
+        public async Task DeveBuscarCursoPorId()
+        {
+            var curso = CursoBuilder.Novo().ComId(_faker.Random.Guid()).Build();
+
+            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(curso.Id)).ReturnsAsync(curso);
+
+            var response = await _cursoService.ObterPorId(curso.Id);
+
+            _cursoRepositorioMock.Verify(r => r.ObterPorId(curso.Id), Times.Once);
+            response.ToExpectedObject().ShouldMatch(new CursoDto(curso));
+        }
     }
 }

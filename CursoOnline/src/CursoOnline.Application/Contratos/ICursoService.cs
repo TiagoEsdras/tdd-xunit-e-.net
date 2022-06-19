@@ -12,5 +12,7 @@ namespace CursoOnline.Application.Contratos
         Task<CursoDto> Atualizar(Guid id, UpdateCursoDto cursoDto);
 
         Task<List<CursoDto>> ObterCursos();
+
+        Task<CursoDto> ObterPorId(Guid id);
     }
 }
