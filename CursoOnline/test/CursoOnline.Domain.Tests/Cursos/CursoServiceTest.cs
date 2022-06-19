@@ -140,5 +140,15 @@ namespace CursoOnline.Domain.Tests.Cursos
 
             error.ComMensagem(ErroMessage.ID_INVALIDO);
         }
+
+        [Fact]
+        public async Task DeveRetornarErroQuandoAoBuscarCursoPorIdNaoExistirRegistro()
+        {
+            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(_faker.Random.Guid())).ThrowsAsync(new ArgumentException(message: ErroMessage.CURSO_NAO_EXISTENTE));
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _cursoService.ObterPorId(_faker.Random.Guid()));
+
+            error.ComMensagem(ErroMessage.CURSO_NAO_EXISTENTE);
+        }
     }
 }

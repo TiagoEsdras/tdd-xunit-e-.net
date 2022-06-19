@@ -44,8 +44,7 @@ namespace CursoOnline.Application
 
             var curso = await _cursoRepositorio.ObterPorId(id);
 
-            if (curso is null)
-                throw new ArgumentException(ErroMessage.CURSO_NAO_EXISTENTE);
+            LancarExcecaoQuandoCursoEhNulo(curso);
 
             curso.AlterarNome(cursoDto.Nome);
             curso.AlterarDescricao(cursoDto.Descricao);
@@ -65,7 +64,14 @@ namespace CursoOnline.Application
         {
             ValidadorDeGuid.IsValid(id);
             var curso = await _cursoRepositorio.ObterPorId(id);
+            LancarExcecaoQuandoCursoEhNulo(curso);
             return new CursoDto(curso);
+        }
+
+        private static void LancarExcecaoQuandoCursoEhNulo(Curso curso)
+        {
+            if (curso is null)
+                throw new ArgumentException(ErroMessage.CURSO_NAO_EXISTENTE);
         }
     }
 }
