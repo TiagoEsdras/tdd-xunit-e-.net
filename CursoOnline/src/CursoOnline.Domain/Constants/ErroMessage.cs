@@ -17,5 +17,6 @@
         public const string INTERNAL_SERVER_ERROR = "Internal server error";
         public const string ALUNO_NAO_EXISTENTE = "Não existe aluno com o id informado";
         public const string CURSO_NAO_EXISTENTE = "Não existe curso com o id informado";
+        public const string ALUNO_INVALIDO = "Aluno inválido";
     }
 }
