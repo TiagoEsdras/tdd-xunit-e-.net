@@ -39,6 +39,15 @@ namespace CursoOnline.Domain.Tests.Matriculas
                MatriculaBuilder.Novo().ComAluno(alunoInvalido).Build()
            ).ComMensagem(ErroMessage.ALUNO_INVALIDO);
         }
+
+        [Theory]
+        [InlineData(null)]
+        public void NaoDeveCriarMatriculaSemCurso(Curso cursoInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+               MatriculaBuilder.Novo().ComCurso(cursoInvalido).Build()
+           ).ComMensagem(ErroMessage.CURSO_INVALIDO);
+        }
     }
 
     public class MatriculaBuilder
@@ -68,6 +77,12 @@ namespace CursoOnline.Domain.Tests.Matriculas
             return this;
         }
 
+        public MatriculaBuilder ComCurso(Curso curso)
+        {
+            _curso = curso;
+            return this;
+        }
+
         public Matricula Build()
         {
             var matricula = new Matricula(_aluno, _curso, _valorPago);
@@ -81,6 +96,8 @@ namespace CursoOnline.Domain.Tests.Matriculas
         {
             if (aluno is null)
                 throw new ArgumentException(ErroMessage.ALUNO_INVALIDO);
+            if (curso is null)
+                throw new ArgumentException(ErroMessage.CURSO_INVALIDO);
 
             Aluno = aluno;
             Curso = curso;
@@ -89,6 +106,7 @@ namespace CursoOnline.Domain.Tests.Matriculas
 
         [Key]
         public Guid Id { get; set; }
+
         public Aluno Aluno { get; set; }
         public Curso Curso { get; set; }
         public decimal ValorPago { get; set; }

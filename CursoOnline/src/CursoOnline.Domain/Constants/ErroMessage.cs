@@ -18,5 +18,6 @@
         public const string ALUNO_NAO_EXISTENTE = "Não existe aluno com o id informado";
         public const string CURSO_NAO_EXISTENTE = "Não existe curso com o id informado";
         public const string ALUNO_INVALIDO = "Aluno inválido";
+        public const string CURSO_INVALIDO = "Curso inválido";
     }
 }
