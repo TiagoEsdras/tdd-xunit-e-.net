@@ -16,7 +16,7 @@ namespace CursoOnline.Domain.Tests.Matriculas
         {
             var aluno = AlunoBuilder.Novo().Build();
             var curso = CursoBuilder.Novo().Build();
-            const decimal valorPago = 1000;
+            var valorPago = curso.Valor;
 
             var matriculaEsperada = new
             {
@@ -56,6 +56,17 @@ namespace CursoOnline.Domain.Tests.Matriculas
             Assert.Throws<ArgumentException>(() =>
                MatriculaBuilder.Novo().ComValorPago(valorPagoInvalido).Build()
            ).ComMensagem(ErroMessage.VALOR_PAGO_INVALIDO);
+        }
+
+        [Theory]
+        [InlineData(100, 200)]
+        public void NaoDeveCriarMatriculaComValorPagoMaiorQueValorDoCurso(decimal valorDoCurso, decimal valorPago)
+        {
+            var curso = CursoBuilder.Novo().ComValor(valorDoCurso).Build();
+
+            Assert.Throws<ArgumentException>(() =>
+               MatriculaBuilder.Novo().ComCurso(curso).ComValorPago(valorPago).Build()
+           ).ComMensagem(ErroMessage.VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO);
         }
     }
 }

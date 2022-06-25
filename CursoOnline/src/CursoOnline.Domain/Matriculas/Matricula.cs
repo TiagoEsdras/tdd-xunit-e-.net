@@ -16,6 +16,8 @@ namespace CursoOnline.Domain.Matriculas
                 throw new ArgumentException(ErroMessage.CURSO_INVALIDO);
             if (valorPago <= 0)
                 throw new ArgumentException(ErroMessage.VALOR_PAGO_INVALIDO);
+            if (valorPago > curso.Valor)
+                throw new ArgumentException(ErroMessage.VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO);
 
             Aluno = aluno;
             Curso = curso;
