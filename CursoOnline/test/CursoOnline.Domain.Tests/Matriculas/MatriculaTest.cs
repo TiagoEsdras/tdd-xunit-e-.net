@@ -48,6 +48,16 @@ namespace CursoOnline.Domain.Tests.Matriculas
                MatriculaBuilder.Novo().ComCurso(cursoInvalido).Build()
            ).ComMensagem(ErroMessage.CURSO_INVALIDO);
         }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-50.88)]
+        public void NaoDeveCriarMatriculaComValorPagoInvalido(decimal valorPagoInvalido)
+        {
+            Assert.Throws<ArgumentException>(() =>
+               MatriculaBuilder.Novo().ComValorPago(valorPagoInvalido).Build()
+           ).ComMensagem(ErroMessage.VALOR_PAGO_INVALIDO);
+        }
     }
 
     public class MatriculaBuilder
@@ -83,6 +93,12 @@ namespace CursoOnline.Domain.Tests.Matriculas
             return this;
         }
 
+        public MatriculaBuilder ComValorPago(decimal valorPago)
+        {
+            _valorPago = valorPago;
+            return this;
+        }
+
         public Matricula Build()
         {
             var matricula = new Matricula(_aluno, _curso, _valorPago);
@@ -98,6 +114,8 @@ namespace CursoOnline.Domain.Tests.Matriculas
                 throw new ArgumentException(ErroMessage.ALUNO_INVALIDO);
             if (curso is null)
                 throw new ArgumentException(ErroMessage.CURSO_INVALIDO);
+            if (valorPago <= 0)
+                throw new ArgumentException(ErroMessage.VALOR_PAGO_INVALIDO);
 
             Aluno = aluno;
             Curso = curso;

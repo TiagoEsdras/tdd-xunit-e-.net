@@ -19,5 +19,6 @@
         public const string CURSO_NAO_EXISTENTE = "Não existe curso com o id informado";
         public const string ALUNO_INVALIDO = "Aluno inválido";
         public const string CURSO_INVALIDO = "Curso inválido";
+        public const string VALOR_PAGO_INVALIDO = "Valor pago não pode ser menor ou igual a zero";
     }
 }
