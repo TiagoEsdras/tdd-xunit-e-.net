@@ -22,13 +22,16 @@ namespace CursoOnline.Domain.Matriculas
             Aluno = aluno;
             Curso = curso;
             ValorPago = valorPago;
+            ExisteDesconto = valorPago < curso.Valor;
         }
 
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
-        public Aluno Aluno { get; set; }
-        public Curso Curso { get; set; }
-        public decimal ValorPago { get; set; }
+        public Aluno Aluno { get; private set; }
+        public Curso Curso { get; private set; }
+        public decimal ValorPago { get; private set; }
+
+        public bool ExisteDesconto { get; private set; }
     }
 }

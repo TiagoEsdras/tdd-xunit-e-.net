@@ -68,5 +68,15 @@ namespace CursoOnline.Domain.Tests.Matriculas
                MatriculaBuilder.Novo().ComCurso(curso).ComValorPago(valorPago).Build()
            ).ComMensagem(ErroMessage.VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO);
         }
+
+        [Theory]
+        [InlineData(200, 100)]
+        public void DeveIndicarQUeHouveDescontoNaMatricula(decimal valorDoCurso, decimal valorPago)
+        {
+            var curso = CursoBuilder.Novo().ComValor(valorDoCurso).Build();
+            var matricula = MatriculaBuilder.Novo().ComCurso(curso).ComValorPago(valorPago).Build();
+
+            Assert.True(matricula.ExisteDesconto);
+        }
     }
 }
