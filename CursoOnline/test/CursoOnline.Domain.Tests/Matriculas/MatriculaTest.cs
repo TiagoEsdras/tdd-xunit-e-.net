@@ -1,11 +1,10 @@
-﻿using Bogus;
-using CursoOnline.Domain.Alunos;
+﻿using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Matriculas;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using System;
-using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace CursoOnline.Domain.Tests.Matriculas
@@ -58,75 +57,5 @@ namespace CursoOnline.Domain.Tests.Matriculas
                MatriculaBuilder.Novo().ComValorPago(valorPagoInvalido).Build()
            ).ComMensagem(ErroMessage.VALOR_PAGO_INVALIDO);
         }
-    }
-
-    public class MatriculaBuilder
-    {
-        private Guid _id;
-        private Aluno _aluno;
-        private Curso _curso;
-        private decimal _valorPago;
-
-        public MatriculaBuilder()
-        {
-            var faker = new Faker("pt_BR");
-            _id = faker.Random.Guid();
-            _aluno = AlunoBuilder.Novo().Build();
-            _curso = CursoBuilder.Novo().Build();
-            _valorPago = faker.Random.Decimal(500, 1000);
-        }
-
-        public static MatriculaBuilder Novo()
-        {
-            return new MatriculaBuilder();
-        }
-
-        public MatriculaBuilder ComAluno(Aluno aluno)
-        {
-            _aluno = aluno;
-            return this;
-        }
-
-        public MatriculaBuilder ComCurso(Curso curso)
-        {
-            _curso = curso;
-            return this;
-        }
-
-        public MatriculaBuilder ComValorPago(decimal valorPago)
-        {
-            _valorPago = valorPago;
-            return this;
-        }
-
-        public Matricula Build()
-        {
-            var matricula = new Matricula(_aluno, _curso, _valorPago);
-            return matricula;
-        }
-    }
-
-    public class Matricula
-    {
-        public Matricula(Aluno aluno, Curso curso, decimal valorPago)
-        {
-            if (aluno is null)
-                throw new ArgumentException(ErroMessage.ALUNO_INVALIDO);
-            if (curso is null)
-                throw new ArgumentException(ErroMessage.CURSO_INVALIDO);
-            if (valorPago <= 0)
-                throw new ArgumentException(ErroMessage.VALOR_PAGO_INVALIDO);
-
-            Aluno = aluno;
-            Curso = curso;
-            ValorPago = valorPago;
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-
-        public Aluno Aluno { get; set; }
-        public Curso Curso { get; set; }
-        public decimal ValorPago { get; set; }
     }
 }
