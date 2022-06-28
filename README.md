@@ -147,7 +147,7 @@ cd src/CursoOnline.API
 dotnet watch run
 ```
 
-## Authors
+## Autor
  
 **Tiago Esdras**: @TiagoEsdras (https://github.com/TiagoEsdras)
  
