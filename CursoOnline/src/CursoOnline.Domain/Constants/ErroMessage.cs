@@ -21,5 +21,6 @@
         public const string CURSO_INVALIDO = "Curso inválido";
         public const string VALOR_PAGO_INVALIDO = "Valor pago não pode ser menor ou igual a zero";
         public const string VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO = "Valor pago não pode ser maior que o valor do curso";
+        public const string PUBLICO_ALVO_DE_CURSO_E_ALUNO_DIFERENTES = "Público alvo de curso e aluno são diferentes";
     }
 }

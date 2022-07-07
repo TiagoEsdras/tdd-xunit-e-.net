@@ -1,6 +1,7 @@
 ﻿using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Enums;
 using CursoOnline.Domain.Matriculas;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
@@ -77,6 +78,18 @@ namespace CursoOnline.Domain.Tests.Matriculas
             var matricula = MatriculaBuilder.Novo().ComCurso(curso).ComValorPago(valorPago).Build();
 
             Assert.True(matricula.ExisteDesconto);
+        }
+
+        [Theory]
+        [InlineData(PublicoAlvoEnum.Empreendedor, PublicoAlvoEnum.Empregado)]
+        public void NaoDeveAdicionarMatriculaCasoPublicoAlvoDoCursoEAlunoNaoForemIguais(PublicoAlvoEnum cursoPublicoAlvo, PublicoAlvoEnum alunoPublicoAlvo)
+        {
+            var curso = CursoBuilder.Novo().ComPublicoAlvo(cursoPublicoAlvo).Build();
+            var aluno = AlunoBuilder.Novo().ComPublicoAlvo(alunoPublicoAlvo).Build();
+
+            Assert.Throws<ArgumentException>(() =>
+               MatriculaBuilder.Novo().ComCurso(curso).ComAluno(aluno).ComValorPago(curso.Valor).Build()
+           ).ComMensagem(ErroMessage.PUBLICO_ALVO_DE_CURSO_E_ALUNO_DIFERENTES);
         }
     }
 }

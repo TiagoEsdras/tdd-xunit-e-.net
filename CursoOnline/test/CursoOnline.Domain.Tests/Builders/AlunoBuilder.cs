@@ -35,6 +35,12 @@ namespace CursoOnline.Domain.Tests.Builders
             return this;
         }
 
+        public AlunoBuilder ComPublicoAlvo(PublicoAlvoEnum publicoAlvo)
+        {
+            _publicoAlvo = publicoAlvo;
+            return this;
+        }
+
         public AlunoBuilder ComCPF(string cpf)
         {
             _cpf = cpf;

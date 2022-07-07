@@ -18,6 +18,8 @@ namespace CursoOnline.Domain.Matriculas
                 throw new ArgumentException(ErroMessage.VALOR_PAGO_INVALIDO);
             if (valorPago > curso.Valor)
                 throw new ArgumentException(ErroMessage.VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO);
+            if (aluno.PublicoAlvo != curso.PublicoAlvo)
+                throw new ArgumentException(ErroMessage.PUBLICO_ALVO_DE_CURSO_E_ALUNO_DIFERENTES);
 
             Aluno = aluno;
             Curso = curso;
