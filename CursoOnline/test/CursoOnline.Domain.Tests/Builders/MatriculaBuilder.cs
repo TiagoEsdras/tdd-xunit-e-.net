@@ -45,6 +45,12 @@ namespace CursoOnline.Domain.Tests.Builders
             return this;
         }
 
+        public MatriculaBuilder ComId(Guid id)
+        {
+            _id = id;
+            return this;
+        }
+
         public Matricula Build()
         {
             var matricula = new Matricula(_aluno, _curso, _valorPago);
