@@ -3,13 +3,13 @@ using CursoOnline.Dados;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Cursos;
-using CursoOnline.Domain.Helpers;
 using CursoOnline.Domain.Matriculas;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -78,6 +78,25 @@ namespace CursoOnline.Domain.Tests.Matriculas
             _matriculaRepositorioMock.Verify(r => r.ObterPorId(matricula.Id), Times.Once);
             response.ToExpectedObject().ShouldMatch(new MatriculaDto(matricula));
         }
+
+        [Fact]
+        public async Task DeveBuscarListaDeMatriculas()
+        {
+            var quantidadeDeMatriculas = _faker.Random.Int(0, 10);
+            var matriculas = new List<Matricula>();
+            for (int i = 0; i < quantidadeDeMatriculas; i++)
+            {
+                matriculas.Add(MatriculaBuilder.Novo().Build());
+            }
+
+            _matriculaRepositorioMock.Setup(mr => mr.ObterLista()).ReturnsAsync(matriculas);
+
+            var response = await _matriculaService.ObterMatriculas();
+
+            response.ToExpectedObject().ShouldMatch(matriculas.Select(it => new MatriculaDto(it)));
+            _matriculaRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
+            Assert.Equal(response.Count, quantidadeDeMatriculas);
+        }
     }
 
     public class CreateMatriculaDto
@@ -117,6 +136,13 @@ namespace CursoOnline.Domain.Tests.Matriculas
 
             return new MatriculaDto(matricula);
         }
+
+        public async Task<List<MatriculaDto>> ObterMatriculas()
+        {
+            var matriculas = await _matriculaRepositorio.ObterLista();
+
+            return matriculas.Select(matricula => new MatriculaDto(matricula)).ToList();
+        }
     }
 
     public interface IMatriculaService
@@ -145,15 +171,24 @@ namespace CursoOnline.Domain.Tests.Matriculas
     public interface IMatriculaRepositorio
     {
         Task<Matricula> ObterPorId(Guid id);
+
+        Task<List<Matricula>> ObterLista();
     }
 
     public class MatriculaRepositorio : RepositorioBase<Matricula>, IMatriculaRepositorio
     {
         private readonly DatabaseContext _databaseContext;
+
         public MatriculaRepositorio(DatabaseContext databaseContext) : base(databaseContext)
         {
             _databaseContext = databaseContext;
         }
+
+        public async Task<List<Matricula>> ObterLista()
+        {
+            return await _databaseContext.Matriculas.ToListAsync();
+        }
+
         public async Task<Matricula> ObterPorId(Guid id)
         {
             return await _databaseContext.Matriculas.Where(c => c.Id == id).FirstOrDefaultAsync();
