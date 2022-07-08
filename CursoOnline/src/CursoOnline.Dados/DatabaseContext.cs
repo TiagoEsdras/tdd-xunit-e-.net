@@ -1,5 +1,6 @@
 ﻿using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Cursos;
+using CursoOnline.Domain.Matriculas;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursoOnline.Dados
@@ -12,6 +13,7 @@ namespace CursoOnline.Dados
 
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Matricula> Matriculas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

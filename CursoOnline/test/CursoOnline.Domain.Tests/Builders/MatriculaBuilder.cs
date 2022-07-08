@@ -17,9 +17,9 @@ namespace CursoOnline.Domain.Tests.Builders
         {
             var faker = new Faker("pt_BR");
             _id = faker.Random.Guid();
-            _aluno = AlunoBuilder.Novo().Build();
-            _curso = CursoBuilder.Novo().Build();
-            _valorPago = faker.Random.Decimal(500, 1000);
+            _aluno = AlunoBuilder.Novo().ComId(faker.Random.Guid()).Build();
+            _curso = CursoBuilder.Novo().ComId(faker.Random.Guid()).Build();
+            _valorPago = _curso.Valor;
         }
 
         public static MatriculaBuilder Novo()
