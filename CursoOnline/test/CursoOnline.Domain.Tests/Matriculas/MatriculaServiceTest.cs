@@ -118,6 +118,23 @@ namespace CursoOnline.Domain.Tests.Matriculas
             _matriculaRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
             Assert.Equal(response.Count, quantidadeDeMatriculas);
         }
+
+        [Fact]
+        public async Task DeveDeletarMatriculaComIdInformado()
+        {
+            var quantidadeDeMatriculas = _faker.Random.Int(1, 10);
+            var matriculas = new List<Matricula>();
+            for (int i = 0; i < quantidadeDeMatriculas; i++)
+            {
+                matriculas.Add(MatriculaBuilder.Novo().Build());
+            }
+
+            _matriculaRepositorioMock.Setup(mr => mr.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(matriculas[0]);
+
+            await _matriculaService.Deletar(matriculas[0].Id);
+
+            _matriculaRepositorioMock.Verify(r => r.Deletar(matriculas[0]), Times.Once);
+        }
     }
 
     public class UpdateMatriculaDto
@@ -179,6 +196,12 @@ namespace CursoOnline.Domain.Tests.Matriculas
             var matriculaAtualizada = await _repositorioBase.Atualizar(matricula);
             return new MatriculaDto(matriculaAtualizada);
         }
+
+        public async Task Deletar(Guid id)
+        {
+            var matricula = await _matriculaRepositorio.ObterPorId(id);
+            await _matriculaRepositorio.Deletar(matricula);
+        }
     }
 
     public interface IMatriculaService
@@ -215,6 +238,8 @@ namespace CursoOnline.Domain.Tests.Matriculas
         Task<Matricula> ObterPorId(Guid id);
 
         Task<List<Matricula>> ObterLista();
+
+        Task Deletar(Matricula matricula);
     }
 
     public class MatriculaRepositorio : RepositorioBase<Matricula>, IMatriculaRepositorio
@@ -234,6 +259,12 @@ namespace CursoOnline.Domain.Tests.Matriculas
         public async Task<Matricula> ObterPorId(Guid id)
         {
             return await _databaseContext.Matriculas.Where(c => c.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task Deletar(Matricula matricula)
+        {
+            _databaseContext.Matriculas.Remove(matricula);
+            await _databaseContext.SaveChangesAsync();
         }
     }
 }
