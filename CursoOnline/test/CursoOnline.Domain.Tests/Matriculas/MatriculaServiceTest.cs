@@ -24,6 +24,7 @@ namespace CursoOnline.Domain.Tests.Matriculas
         private readonly Mock<IRepositorioBase<Matricula>> _repositorioBaseMock;
         private readonly MatriculaService _matriculaService;
         private readonly CreateMatriculaDto _createMatriculaDto;
+        private readonly UpdateMatriculaDto _updateMatriculaDto;
         private readonly Aluno _aluno;
         private readonly Curso _curso;
         private readonly Faker _faker;
@@ -49,6 +50,11 @@ namespace CursoOnline.Domain.Tests.Matriculas
                 ValorPago = _curso.Valor
             };
 
+            _updateMatriculaDto = new UpdateMatriculaDto
+            {
+                ValorPago = _curso.Valor * 0.7m
+            };
+
             _matriculaService = new MatriculaService(_matriculaRepositorioMock.Object, _cursoRepositorioMock.Object, _alunoRepositorioMock.Object, _repositorioBaseMock.Object);
         }
 
@@ -64,6 +70,21 @@ namespace CursoOnline.Domain.Tests.Matriculas
             var response = await _matriculaService.Adicionar(_createMatriculaDto);
 
             response.ToExpectedObject().ShouldMatch(new MatriculaDto(matricula));
+        }
+
+        [Fact]
+        public async Task DeveAlterarValorPagoDaMatricula()
+        {
+            var matricula = MatriculaBuilder.Novo().ComId(_faker.Random.Guid()).ComCurso(_curso).ComAluno(_aluno).ComValorPago(_curso.Valor).Build();
+            _matriculaRepositorioMock.Setup(mr => mr.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(matricula);
+
+            var matriculaAtualizada = MatriculaBuilder.Novo().ComId(matricula.Id).ComCurso(_curso).ComAluno(_aluno).ComValorPago(_updateMatriculaDto.ValorPago).Build();
+
+            _repositorioBaseMock.Setup(rb => rb.Atualizar(It.IsAny<Matricula>())).ReturnsAsync(matriculaAtualizada);
+
+            var response = await _matriculaService.Atualizar(matricula.Id, _updateMatriculaDto);
+
+            response.ToExpectedObject().ShouldMatch(new MatriculaDto(matriculaAtualizada));
         }
 
         [Fact]
@@ -97,6 +118,11 @@ namespace CursoOnline.Domain.Tests.Matriculas
             _matriculaRepositorioMock.Verify(r => r.ObterLista(), Times.Once);
             Assert.Equal(response.Count, quantidadeDeMatriculas);
         }
+    }
+
+    public class UpdateMatriculaDto
+    {
+        public decimal ValorPago { get; set; }
     }
 
     public class CreateMatriculaDto
@@ -143,11 +169,27 @@ namespace CursoOnline.Domain.Tests.Matriculas
 
             return matriculas.Select(matricula => new MatriculaDto(matricula)).ToList();
         }
+
+        public async Task<MatriculaDto> Atualizar(Guid id, UpdateMatriculaDto updateMatriculaDto)
+        {
+            var matricula = await _matriculaRepositorio.ObterPorId(id);
+
+            matricula.AlterarValorPago(updateMatriculaDto.ValorPago);
+
+            var matriculaAtualizada = await _repositorioBase.Atualizar(matricula);
+            return new MatriculaDto(matriculaAtualizada);
+        }
     }
 
     public interface IMatriculaService
     {
         Task<MatriculaDto> Adicionar(CreateMatriculaDto matriculaDto);
+
+        Task<MatriculaDto> ObterPorId(Guid id);
+
+        Task<List<MatriculaDto>> ObterMatriculas();
+
+        Task<MatriculaDto> Atualizar(Guid id, UpdateMatriculaDto updateMatriculaDto);
     }
 
     public class MatriculaDto

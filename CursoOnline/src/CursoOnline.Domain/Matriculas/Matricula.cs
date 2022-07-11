@@ -35,5 +35,16 @@ namespace CursoOnline.Domain.Matriculas
         public decimal ValorPago { get; private set; }
 
         public bool ExisteDesconto { get; private set; }
+
+
+        public void AlterarValorPago(decimal valorPago)
+        {
+            if (valorPago <= 0)
+                throw new ArgumentException(ErroMessage.VALOR_PAGO_INVALIDO);
+            else if (valorPago > Curso.Valor)
+                throw new ArgumentException(ErroMessage.VALOR_PAGO_MAIOR_QUE_VALOR_DO_CURSO);
+
+            ValorPago = valorPago;
+        }
     }
 }
