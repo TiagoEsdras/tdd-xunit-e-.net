@@ -1,5 +1,5 @@
 ﻿using CursoOnline.Application.Contratos;
-using CursoOnline.Application.Dtos.Alunos;
+using CursoOnline.Application.Dtos.Matriculas;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,28 +9,28 @@ namespace CursoOnline.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AlunosController : ControllerBase
+    public class MatriculasController : ControllerBase
     {
-        private readonly IAlunoService _alunoService;
+        private readonly IMatriculaService _matriculaService;
 
-        public AlunosController(IAlunoService alunoService)
+        public MatriculasController(IMatriculaService matriculaService)
         {
-            _alunoService = alunoService;
+            _matriculaService = matriculaService;
         }
 
         /// <summary>
-        /// Cria um aluno
+        /// Cria uma matricula
         /// </summary>
-        /// <param name="createAlunoDto"></param>
-        /// <returns>AlunoDto</returns>
+        /// <param name="createMatriculaDto"></param>
+        /// <returns>MatriculaDto</returns>
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> Post(CreateAlunoDto createAlunoDto)
+        [ProducesResponseType(200, Type = typeof(MatriculaDto))]
+        public async Task<IActionResult> Post(CreateMatriculaDto createMatriculaDto)
         {
             try
             {
-                var alunoCriado = await _alunoService.Adicionar(createAlunoDto);
-                return Ok(alunoCriado);
+                var matriculaCriada = await _matriculaService.Adicionar(createMatriculaDto);
+                return Ok(matriculaCriada);
             }
             catch (Exception ex)
             {
@@ -39,18 +39,18 @@ namespace CursoOnline.API.Controllers
         }
 
         /// <summary>
-        /// Obtem um aluno pelo id
+        /// Obtem uma matricula pelo id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>AlunoDto</returns>
+        /// <returns>MatriculaDto</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(AlunoDto))]
+        [ProducesResponseType(200, Type = typeof(MatriculaDto))]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
             {
-                var aluno = await _alunoService.ObterPorId(id);
-                return Ok(aluno);
+                var matricula = await _matriculaService.ObterPorId(id);
+                return Ok(matricula);
             }
             catch (Exception ex)
             {
@@ -59,17 +59,17 @@ namespace CursoOnline.API.Controllers
         }
 
         /// <summary>
-        /// Obtem a lista de todos alunos
+        /// Obtem lista de matriculas
         /// </summary>
-        /// <returns>List<AlunoDto></AlunoDto></returns>
+        /// <returns>List<MatriculaDto></MatriculaDto></returns>
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<AlunoDto>))]
+        [ProducesResponseType(200, Type = typeof(List<MatriculaDto>))]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var alunos = await _alunoService.ObterLista();
-                return Ok(alunos);
+                var matriculas = await _matriculaService.ObterMatriculas();
+                return Ok(matriculas);
             }
             catch (Exception ex)
             {
@@ -78,19 +78,19 @@ namespace CursoOnline.API.Controllers
         }
 
         /// <summary>
-        /// Atualiza um aluno
+        /// Atualiza uma matricula
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="updateAlunoDto"></param>
-        /// <returns>AlunoDto</returns>
+        /// <param name="updateMatriculaDto"></param>
+        /// <returns>MatriculaDto</returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(200, Type = typeof(AlunoDto))]
-        public async Task<IActionResult> Update(Guid id, UpdateAlunoDto updateAlunoDto)
+        [ProducesResponseType(200, Type = typeof(MatriculaDto))]
+        public async Task<IActionResult> Update(Guid id, UpdateMatriculaDto updateMatriculaDto)
         {
             try
             {
-                var alunoAtualizado = await _alunoService.Atualizar(id, updateAlunoDto);
-                return Ok(alunoAtualizado);
+                var matriculaAtualizada = await _matriculaService.Atualizar(id, updateMatriculaDto);
+                return Ok(matriculaAtualizada);
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace CursoOnline.API.Controllers
         }
 
         /// <summary>
-        /// Delete um aluno
+        /// Deleta uma matricula
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
@@ -108,7 +108,7 @@ namespace CursoOnline.API.Controllers
         {
             try
             {
-                await _alunoService.Deletar(id);
+                await _matriculaService.Deletar(id);
                 return Ok();
             }
             catch (Exception ex)

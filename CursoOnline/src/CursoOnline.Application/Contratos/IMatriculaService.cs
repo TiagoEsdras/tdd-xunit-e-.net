@@ -14,5 +14,7 @@ namespace CursoOnline.Application.Contratos
         Task<List<MatriculaDto>> ObterMatriculas();
 
         Task<MatriculaDto> Atualizar(Guid id, UpdateMatriculaDto updateMatriculaDto);
+
+        Task Deletar(Guid id);
     }
 }

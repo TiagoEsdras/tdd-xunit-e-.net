@@ -18,6 +18,11 @@ namespace CursoOnline.API.Controllers
             _cursoService = cursoService;
         }
 
+        /// <summary>
+        /// Cria um curso
+        /// </summary>
+        /// <param name="cursoDto"></param>
+        /// <returns>CursoDto</returns>
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> Post(CreateCursoDto cursoDto)
@@ -33,6 +38,10 @@ namespace CursoOnline.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtem a lista de todos cursos
+        /// </summary>
+        /// <returns>List<CursoDto></CursoDto></returns>
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(List<CursoDto>))]
         public async Task<IActionResult> GetAll()
@@ -48,6 +57,11 @@ namespace CursoOnline.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtem um curso pelo id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>CursoDto</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> GetBiId(Guid id)
@@ -63,6 +77,12 @@ namespace CursoOnline.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Atualiza um curso
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cursoDto"></param>
+        /// <returns>CursoDto</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(200, Type = typeof(CursoDto))]
         public async Task<IActionResult> Update(Guid id, UpdateCursoDto cursoDto)
@@ -78,6 +98,10 @@ namespace CursoOnline.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Deleta um curso
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> Delete(Guid id)
