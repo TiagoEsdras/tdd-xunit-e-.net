@@ -153,5 +153,5 @@ dotnet watch run
 
 ## Autor
  
-[@TiagoEsdras](https://github.com/TiagoEsdras)
+[@TiagoEsdras](https://www.linkedin.com/in/tiagoesdras/)
  
