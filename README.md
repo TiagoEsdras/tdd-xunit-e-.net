@@ -121,7 +121,7 @@ Aqui estão as tecnologias utlilizadas no projeto:
 * Bogus
 * Reportgenerator
 
-## REQUISITOS NECESSÁRIOS
+## Requisitos Necessários
 
 Para rodar esse projeto você precisará de:
 
@@ -129,7 +129,7 @@ Para rodar esse projeto você precisará de:
 * SDK .NET - Versão 5.0.4
 * Windows 
 
-## COMO USAR
+## Como Usar
 Rode os seguintes comandos:
 
  ```
@@ -148,7 +148,7 @@ cd src/CursoOnline.API
 dotnet watch run
 ```
 
-## Relatório de cobertura
+## Relatório de Cobertura
 ![Relatório de cobertura gerado pelo Reportgenerator](https://i.ibb.co/R6gy7CX/cobertura-final.jpg)
 
 ## Autor
