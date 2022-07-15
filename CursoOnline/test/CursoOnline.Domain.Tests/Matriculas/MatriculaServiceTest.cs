@@ -2,6 +2,7 @@
 using CursoOnline.Dados;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
+using CursoOnline.Domain.Constants;
 using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Matriculas;
 using CursoOnline.Domain.Tests.Builders;
@@ -65,11 +66,25 @@ namespace CursoOnline.Domain.Tests.Matriculas
 
             _cursoRepositorioMock.Setup(cr => cr.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(_curso);
             _alunoRepositorioMock.Setup(ar => ar.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(_aluno);
+            _matriculaRepositorioMock.Setup(mr => mr.ObterLista()).ReturnsAsync(new List<Matricula>());
             _repositorioBaseMock.Setup(rb => rb.Adicionar(It.IsAny<Matricula>())).ReturnsAsync(matricula);
 
             var response = await _matriculaService.Adicionar(_createMatriculaDto);
 
             response.ToExpectedObject().ShouldMatch(new MatriculaDto(matricula));
+        }
+
+        [Fact]
+        public async Task DeveLancarExcecaoQuandoAoTentarAdicionarMatriculaJaExistirMatriculaParaOAlunoNoCursoInformado()
+        {
+            var matricula = MatriculaBuilder.Novo().ComId(_faker.Random.Guid()).ComCurso(_curso).ComAluno(_aluno).ComValorPago(_curso.Valor).Build();
+
+            _cursoRepositorioMock.Setup(cr => cr.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(_curso);
+            _alunoRepositorioMock.Setup(ar => ar.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(_aluno);
+            _matriculaRepositorioMock.Setup(mr => mr.ObterLista()).ReturnsAsync(new List<Matricula>() { matricula });
+
+            var error = await Assert.ThrowsAsync<ArgumentException>(() => _matriculaService.Adicionar(_createMatriculaDto));
+            error.ComMensagem(ErroMessage.ALUNO_JA_MATRICULADO_PARA_CURSO);
         }
 
         [Fact]
@@ -168,6 +183,11 @@ namespace CursoOnline.Domain.Tests.Matriculas
         {
             var aluno = await _alunoRepositorio.ObterPorId(matriculaDto.AlunoId);
             var curso = await _cursoRepositorio.ObterPorId(matriculaDto.CursoId);
+
+            var matriculas = await _matriculaRepositorio.ObterLista();
+
+            if (matriculas.Any(m => m.Aluno.Id == matriculaDto.AlunoId && m.Curso.Id == matriculaDto.CursoId))
+                throw new ArgumentException(ErroMessage.ALUNO_JA_MATRICULADO_PARA_CURSO);
 
             var matriculaCriada = await _repositorioBase.Adicionar(new Matricula(aluno, curso, matriculaDto.ValorPago));
             return new MatriculaDto(matriculaCriada);
