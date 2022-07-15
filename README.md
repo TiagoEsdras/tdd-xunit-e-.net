@@ -119,6 +119,7 @@ Aqui estão as tecnologias utlilizadas no projeto:
 * Moq
 * ExpectedObjects
 * Bogus
+* Reportgenerator
 
 ## REQUISITOS NECESSÁRIOS
 
@@ -146,6 +147,9 @@ cd src/CursoOnline.API
 ```
 dotnet watch run
 ```
+
+## Relatório de cobertura
+![Relatório de cobertura gerado pelo Reportgenerator](https://i.ibb.co/R6gy7CX/cobertura-final.jpg)
 
 ## Autor
  
