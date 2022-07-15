@@ -1,5 +1,6 @@
 ﻿using Bogus;
-using CursoOnline.Dados;
+using CursoOnline.Application;
+using CursoOnline.Application.Dtos.Matriculas;
 using CursoOnline.Dados.Contratos;
 using CursoOnline.Domain.Alunos;
 using CursoOnline.Domain.Constants;
@@ -7,7 +8,6 @@ using CursoOnline.Domain.Cursos;
 using CursoOnline.Domain.Matriculas;
 using CursoOnline.Domain.Tests.Builders;
 using ExpectedObjects;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -149,142 +149,6 @@ namespace CursoOnline.Domain.Tests.Matriculas
             await _matriculaService.Deletar(matriculas[0].Id);
 
             _matriculaRepositorioMock.Verify(r => r.Deletar(matriculas[0]), Times.Once);
-        }
-    }
-
-    public class UpdateMatriculaDto
-    {
-        public decimal ValorPago { get; set; }
-    }
-
-    public class CreateMatriculaDto
-    {
-        public Guid AlunoId { get; set; }
-        public Guid CursoId { get; set; }
-        public decimal ValorPago { get; set; }
-    }
-
-    public class MatriculaService : IMatriculaService
-    {
-        private readonly IMatriculaRepositorio _matriculaRepositorio;
-        private readonly ICursoRepositorio _cursoRepositorio;
-        private readonly IAlunoRepositorio _alunoRepositorio;
-        private readonly IRepositorioBase<Matricula> _repositorioBase;
-
-        public MatriculaService(IMatriculaRepositorio matriculaRepositorio, ICursoRepositorio cursoRepositorio, IAlunoRepositorio alunoRepositorio, IRepositorioBase<Matricula> repositorioBase)
-        {
-            _matriculaRepositorio = matriculaRepositorio;
-            _cursoRepositorio = cursoRepositorio;
-            _alunoRepositorio = alunoRepositorio;
-            _repositorioBase = repositorioBase;
-        }
-
-        public async Task<MatriculaDto> Adicionar(CreateMatriculaDto matriculaDto)
-        {
-            var aluno = await _alunoRepositorio.ObterPorId(matriculaDto.AlunoId);
-            var curso = await _cursoRepositorio.ObterPorId(matriculaDto.CursoId);
-
-            var matriculas = await _matriculaRepositorio.ObterLista();
-
-            if (matriculas.Any(m => m.Aluno.Id == matriculaDto.AlunoId && m.Curso.Id == matriculaDto.CursoId))
-                throw new ArgumentException(ErroMessage.ALUNO_JA_MATRICULADO_PARA_CURSO);
-
-            var matriculaCriada = await _repositorioBase.Adicionar(new Matricula(aluno, curso, matriculaDto.ValorPago));
-            return new MatriculaDto(matriculaCriada);
-        }
-
-        public async Task<MatriculaDto> ObterPorId(Guid id)
-        {
-            var matricula = await _matriculaRepositorio.ObterPorId(id);
-
-            return new MatriculaDto(matricula);
-        }
-
-        public async Task<List<MatriculaDto>> ObterMatriculas()
-        {
-            var matriculas = await _matriculaRepositorio.ObterLista();
-
-            return matriculas.Select(matricula => new MatriculaDto(matricula)).ToList();
-        }
-
-        public async Task<MatriculaDto> Atualizar(Guid id, UpdateMatriculaDto updateMatriculaDto)
-        {
-            var matricula = await _matriculaRepositorio.ObterPorId(id);
-
-            matricula.AlterarValorPago(updateMatriculaDto.ValorPago);
-
-            var matriculaAtualizada = await _repositorioBase.Atualizar(matricula);
-            return new MatriculaDto(matriculaAtualizada);
-        }
-
-        public async Task Deletar(Guid id)
-        {
-            var matricula = await _matriculaRepositorio.ObterPorId(id);
-            await _matriculaRepositorio.Deletar(matricula);
-        }
-    }
-
-    public interface IMatriculaService
-    {
-        Task<MatriculaDto> Adicionar(CreateMatriculaDto matriculaDto);
-
-        Task<MatriculaDto> ObterPorId(Guid id);
-
-        Task<List<MatriculaDto>> ObterMatriculas();
-
-        Task<MatriculaDto> Atualizar(Guid id, UpdateMatriculaDto updateMatriculaDto);
-    }
-
-    public class MatriculaDto
-    {
-        public MatriculaDto(Matricula matricula)
-        {
-            Id = matricula.Id;
-            AlunoId = matricula.Aluno.Id;
-            CursoId = matricula.Curso.Id;
-            ValorPago = matricula.ValorPago;
-            ExisteDesconto = matricula.ExisteDesconto;
-        }
-
-        public Guid Id { get; set; }
-        public Guid AlunoId { get; set; }
-        public Guid CursoId { get; set; }
-        public decimal ValorPago { get; set; }
-        public bool ExisteDesconto { get; }
-    }
-
-    public interface IMatriculaRepositorio
-    {
-        Task<Matricula> ObterPorId(Guid id);
-
-        Task<List<Matricula>> ObterLista();
-
-        Task Deletar(Matricula matricula);
-    }
-
-    public class MatriculaRepositorio : RepositorioBase<Matricula>, IMatriculaRepositorio
-    {
-        private readonly DatabaseContext _databaseContext;
-
-        public MatriculaRepositorio(DatabaseContext databaseContext) : base(databaseContext)
-        {
-            _databaseContext = databaseContext;
-        }
-
-        public async Task<List<Matricula>> ObterLista()
-        {
-            return await _databaseContext.Matriculas.ToListAsync();
-        }
-
-        public async Task<Matricula> ObterPorId(Guid id)
-        {
-            return await _databaseContext.Matriculas.Where(c => c.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task Deletar(Matricula matricula)
-        {
-            _databaseContext.Matriculas.Remove(matricula);
-            await _databaseContext.SaveChangesAsync();
         }
     }
 }
